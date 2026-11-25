@@ -1,5 +1,5 @@
 /* ============================================================================
- * Tern 简体中文全面汉化插件样式 (zh-cn v0.5.1)
+ * Tern 简体中文全面汉化插件样式 (zh-cn v0.5.2)
  * 适配版本：Tern 0.9.34
  *
  * 原理说明：
@@ -385,6 +385,16 @@ div.sf-overlay.modal:has(.sf-ov-body .sf-meter .sf-mt-part) {
 div.sf-overlay.modal button.sf-button[title="Close"] > span.sf-btn-label {
   font-size: 0;
   &::before { content: "关闭"; font-size: 12.5px; white-space: nowrap; }
+}
+
+/* ── 5i. omp 欢迎页提示语与空输入框占位文案 ── */
+div.sf-card.nohead:has(.sf-img-svg) > .sf-card-body > .sf-row:nth-of-type(2) > .sf-text {
+  font-size: 0;
+  &::before { content: "输入 / 查看斜杠命令 · 按 Alt+P 切换模型 · 按 Ctrl+Shift+P 打开命令面板"; font-size: 13px; line-height: 1.45; }
+}
+.sf-dock .sf-editor.empty .sf-ed-ph:not(:has(> span)) {
+  font-size: 0;
+  &::before { content: "今天想做点什么？"; font-size: 14px; line-height: 1.4; white-space: nowrap; }
 }
 
 /* ── 6. 设置窗口（Settings）左侧导航与通用元素 ── */
