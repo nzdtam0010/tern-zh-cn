@@ -1,5 +1,5 @@
 /* ============================================================================
- * Tern 简体中文全面汉化插件样式 (zh-cn v0.5.4)
+ * Tern 简体中文全面汉化插件样式 (zh-cn v0.5.5)
  * 适配版本：Tern 0.9.34
  *
  * 原理说明：
@@ -36,11 +36,63 @@
 .tn-pl-scopes .tn-pl-scope[title^="Hosts"] { font-size: 0; }
 .tn-pl-scopes .tn-pl-scope[title^="Hosts"]::before { content: "主机"; font-size: 12px; white-space: nowrap; }
 
-/* 命令面板底部快捷键提示与空状态 */
+/* 命令面板底部快捷键提示、空状态与内置分组/条目 */
 .tn-cmdk .tn-pl-empty-t { font-size: 0; white-space: nowrap !important; max-width: none !important; width: auto !important; }
 .tn-cmdk .tn-pl-empty-t::before { content: "未找到匹配结果"; font-size: 14px; font-weight: 550; white-space: nowrap; }
 .tn-cmdk .tn-pl-empty-s { font-size: 0; white-space: nowrap !important; max-width: none !important; width: auto !important; }
 .tn-cmdk .tn-pl-empty-s::before { content: "试试输入命令名称、面板标题或目录路径。"; font-size: 12.5px; line-height: 1.45; white-space: nowrap; }
+
+.tn-cmdk .ck-list {
+  /* 当前面板 / 会话 / 最近关闭（结构锚定，无嵌套 :has()） */
+  > div.ck-group:has(+ .ck-item > .ck-ic.deck) { font-size: 0; &::before { content: "当前面板"; font-size: 11.5px; } }
+  > div.ck-group:has(+ .ck-item > .tn-pl-acts) { font-size: 0; &::before { content: "会话"; font-size: 11.5px; } }
+  > div.ck-item:has(> .tn-pl-acts) + div.ck-group:has(+ .ck-item > .ck-label > .ck-sub) {
+    font-size: 0; &::before { content: "最近关闭"; font-size: 11.5px; }
+  }
+  /* “全部”页签未筛选时的内置 Git 快捷项（Clone / Create repository） */
+  &:has(> div.ck-group ~ div.ck-group ~ div.ck-group ~ div.ck-group ~ div.ck-group) {
+    > div.ck-item:has(> .ck-label > .ck-sub) + div.ck-group:not(:has(+ .ck-item > .ck-label > .ck-sub)):has(+ .ck-item + .ck-item + div.ck-group) {
+      font-size: 0; &::before { content: "Git 仓库"; font-size: 11.5px; }
+    }
+    > div.ck-item:has(> .ck-label > .ck-sub) + div.ck-group + .ck-item:not(:has(> .ck-label > .ck-sub)):has(+ .ck-item + div.ck-group) > .ck-label {
+      font-size: 0; &::before { content: "克隆仓库…"; font-size: 13.5px; }
+    }
+    > div.ck-item:has(> .ck-label > .ck-sub) + div.ck-group + .ck-item:not(:has(> .ck-label > .ck-sub)) + .ck-item:not(:has(> .ck-label > .ck-sub)):has(+ div.ck-group) > .ck-label {
+      font-size: 0; &::before { content: "新建仓库…"; font-size: 13.5px; }
+    }
+  }
+}
+
+/* 命令面板“主机”页签（Hosts / Add / Add remote host / Connect from mobile） */
+.tn-cmdk:has(.tn-pl-scope[title^="Hosts"].on) .ck-list {
+  > div.ck-group:nth-of-type(1) { font-size: 0; &::before { content: "主机列表"; font-size: 11.5px; } }
+  &:has(> div.ck-group:nth-last-of-type(3)) {
+    > div.ck-group:nth-last-of-type(3) { font-size: 0; &::before { content: "添加设备"; font-size: 11.5px; } }
+    > div.ck-item:nth-last-of-type(2) > .ck-label {
+      font-size: 0;
+      &::before { content: "添加远程主机…"; font-size: 13.5px; margin-right: 8px; }
+      > .ck-sub { font-size: 0; &::before { content: "输入主机地址或 Tailnet 设备"; font-size: 12px; } }
+    }
+    > div.ck-item:last-of-type > .ck-label {
+      font-size: 0;
+      &::before { content: "从手机连接…"; font-size: 13.5px; margin-right: 8px; }
+      > .ck-sub { font-size: 0; &::before { content: "使用手机扫码连接"; font-size: 12px; } }
+    }
+  }
+}
+
+/* 命令面板“命令”页签未筛选时的首位 Git 组 */
+.tn-cmdk:has(.tn-pl-scope[title^="Commands"].on) .ck-list:has(> div.ck-group ~ div.ck-group ~ div.ck-group ~ div.ck-group ~ div.ck-group) {
+  > div.ck-group:first-of-type:has(+ .ck-item + .ck-item + div.ck-group) {
+    font-size: 0; &::before { content: "Git 仓库"; font-size: 11.5px; }
+  }
+  > div.ck-group:first-of-type + .ck-item:has(+ .ck-item + div.ck-group) > .ck-label {
+    font-size: 0; &::before { content: "克隆仓库…"; font-size: 13.5px; }
+  }
+  > div.ck-group:first-of-type + .ck-item + .ck-item:has(+ div.ck-group) > .ck-label {
+    font-size: 0; &::before { content: "新建仓库…"; font-size: 13.5px; }
+  }
+}
 
 .tn-cmdk .ck-foot > span { font-size: 0; }
 .tn-cmdk .ck-foot > span .kbd { font-size: 11px; }

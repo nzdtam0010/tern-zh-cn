@@ -1,6 +1,6 @@
 schema = 1
 id = "zh-cn"
 name = "中文汉化"
-version = "0.5.4"
+version = "0.5.5"
 window = "window.luau"
 styles = ["zh-cn.css"]
