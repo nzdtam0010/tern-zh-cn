@@ -1,5 +1,5 @@
 /* ============================================================================
- * Tern 简体中文全面汉化插件样式 (zh-cn v0.5.2)
+ * Tern 简体中文全面汉化插件样式 (zh-cn v0.5.3)
  * 适配版本：Tern 0.9.34
  *
  * 原理说明：
@@ -395,6 +395,18 @@ div.sf-card.nohead:has(.sf-img-svg) > .sf-card-body > .sf-row:nth-of-type(2) > .
 .sf-dock .sf-editor.empty .sf-ed-ph:not(:has(> span)) {
   font-size: 0;
   &::before { content: "今天想做点什么？"; font-size: 14px; line-height: 1.4; white-space: nowrap; }
+}
+
+/* ── 5j. 无标签页时的空窗口状态（No terminals open） ── */
+.tn-stage.empty > .tn-empty {
+  > .tn-empty-t { font-size: 0; &::before { content: "暂无打开的终端"; font-size: 15px; font-weight: 550; } }
+  > .tn-empty-s { font-size: 0; &::before { content: "所有标签页均已关闭，新建一个标签页即可开始。"; font-size: 13px; line-height: 1.45; } }
+  > .kit-empty-actions > button.btn {
+    font-size: 0;
+    > svg.ico { order: 0; }
+    &::after { order: 1; content: "新建标签页"; font-size: 13px; font-weight: 500; white-space: nowrap; }
+    > span.kbds { order: 2; font-size: 11px; }
+  }
 }
 
 /* ── 6. 设置窗口（Settings）左侧导航与通用元素 ── */
