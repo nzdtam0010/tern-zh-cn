@@ -1,0 +1,3426 @@
+/* ============================================================================
+ * Tern 简体中文全面汉化插件样式 (zh-cn v0.2.0)
+ * 适配版本：Tern 0.9.34
+ *
+ * 原理说明：
+ * 1. 利用 font-size: 0 隐藏原英文文本，并通过 ::before / ::after 注入中文。
+ * 2. 设置界面（.pf）全部 14 个页面通过 .pf-nav:has(... .nav-row.on) + .pf-scroll
+ *    精确按当前页面生效，在设置搜索模式下自动退让，避免误覆盖搜索结果。
+ * 3. 命令面板作用域页签使用 [title^="..."] 属性选择器，不受动态页签数量变化影响。
+ * 4. 插件页采用 :first-of-type / :nth-last-of-type(2) / :last-of-type，
+ *    无论安装多少个插件均不会覆盖插件名称。
+ * ============================================================================ */
+
+/* ── 1. 命令面板（Ctrl+Shift+P / Ctrl+Shift+Space） ── */
+.tn-pl-scopes .tn-pl-scope[title^="All"] { font-size: 0; }
+.tn-pl-scopes .tn-pl-scope[title^="All"]::before { content: "全部"; font-size: 12px; white-space: nowrap; }
+
+.tn-pl-scopes .tn-pl-scope[title^="Commands"] { font-size: 0; }
+.tn-pl-scopes .tn-pl-scope[title^="Commands"]::before { content: "命令"; font-size: 12px; white-space: nowrap; }
+
+.tn-pl-scopes .tn-pl-scope[title^="Files"] { font-size: 0; }
+.tn-pl-scopes .tn-pl-scope[title^="Files"]::before { content: "文件"; font-size: 12px; white-space: nowrap; }
+
+.tn-pl-scopes .tn-pl-scope[title^="Search"] { font-size: 0; }
+.tn-pl-scopes .tn-pl-scope[title^="Search"]::before { content: "搜索"; font-size: 12px; white-space: nowrap; }
+
+.tn-pl-scopes .tn-pl-scope[title^="Branches"] { font-size: 0; }
+.tn-pl-scopes .tn-pl-scope[title^="Branches"]::before { content: "分支"; font-size: 12px; white-space: nowrap; }
+
+.tn-pl-scopes .tn-pl-scope[title^="Commits"] { font-size: 0; }
+.tn-pl-scopes .tn-pl-scope[title^="Commits"]::before { content: "提交"; font-size: 12px; white-space: nowrap; }
+
+.tn-pl-scopes .tn-pl-scope[title^="Sessions"] { font-size: 0; }
+.tn-pl-scopes .tn-pl-scope[title^="Sessions"]::before { content: "会话"; font-size: 12px; white-space: nowrap; }
+
+.tn-pl-scopes .tn-pl-scope[title^="Hosts"] { font-size: 0; }
+.tn-pl-scopes .tn-pl-scope[title^="Hosts"]::before { content: "主机"; font-size: 12px; white-space: nowrap; }
+
+/* 命令面板底部快捷键提示 */
+.tn-cmdk .ck-foot > span { font-size: 0; }
+.tn-cmdk .ck-foot > span .kbd { font-size: 11px; }
+.tn-cmdk .ck-foot > span:nth-of-type(1)::after { content: "选择"; font-size: 12px; white-space: nowrap; }
+.tn-cmdk .ck-foot > span:nth-of-type(2)::after { content: "运行"; font-size: 12px; white-space: nowrap; }
+.tn-cmdk .ck-foot > span.tn-pl-hint::after { content: "随时切换会话"; font-size: 12px; white-space: nowrap; }
+.tn-cmdk .ck-foot > span.grow::after { content: "关闭"; font-size: 12px; white-space: nowrap; }
+
+/* ── 2. 标签栏按钮文字（宽松布局/大尺寸窗口下显示标签时生效） ── */
+button.tb-add > span.lbl { font-size: 0; }
+button.tb-add > span.lbl::before { content: "新建标签页"; font-size: 13px; white-space: nowrap; }
+button.tb-files > span.lbl { font-size: 0; }
+button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-space: nowrap; }
+
+/* ── 3. 顶部待处理通知弹窗（Needs attention） ── */
+.tn-ib .tn-ib-t { font-size: 0; }
+.tn-ib .tn-ib-t::before { content: "待处理事项"; font-size: 13.5px; font-weight: 550; white-space: nowrap; }
+.tn-ib .tn-ib-clear { font-size: 0; display: inline-flex; align-items: center; justify-content: center; }
+.tn-ib .tn-ib-clear::after { content: "全部清除"; font-size: 12px; white-space: nowrap; }
+.tn-ib .tn-ib-empty-t { font-size: 0; white-space: nowrap !important; max-width: none !important; width: auto !important; }
+.tn-ib .tn-ib-empty-t::before { content: "暂无待处理事项"; font-size: 13.5px; font-weight: 500; white-space: nowrap; }
+.tn-ib .tn-ib-empty-s { font-size: 0; }
+.tn-ib .tn-ib-empty-s::before { content: "响铃提醒、长耗时命令、执行失败及等待确认的智能体会显示在这里。"; font-size: 12.5px; line-height: 1.45; }
+
+/* ── 4. 左上角账户与主机菜单（Peers / Account） ── */
+.tn-hp .tn-hp-act[title^="Opens your account"] > span.lbl { font-size: 0; }
+.tn-hp .tn-hp-act[title^="Opens your account"] > span.lbl::before { content: "访问 Stencil 账户"; font-size: 13px; }
+.tn-hp .tn-hp-act[title^="Settings"] > span.lbl { font-size: 0; }
+.tn-hp .tn-hp-act[title^="Settings"] > span.lbl::before { content: "设置…"; font-size: 13px; }
+.tn-hp .tn-hp-act[title="Sign out"] > span.lbl { font-size: 0; }
+.tn-hp .tn-hp-act[title="Sign out"] > span.lbl::before { content: "退出登录"; font-size: 13px; }
+.tn-hp .tn-hp-act[title^="Switch host"] > span.lbl { font-size: 0; }
+.tn-hp .tn-hp-act[title^="Switch host"] > span.lbl::before { content: "切换主机…"; font-size: 13px; }
+
+/* ── 5. 终端查找栏（Find bar） ── */
+.tn-find.none .find-count { font-size: 0; }
+.tn-find.none .find-count::before { content: "无匹配项"; font-size: 12px; white-space: nowrap; }
+
+/* ── 6. 设置窗口（Settings）左侧导航与通用元素 ── */
+.pf .pf-name { font-size: 0; }
+.pf .pf-name::before { content: "设置"; font-size: 14px; font-weight: 550; }
+
+.pf .pf-groups > .pf-group:nth-of-type(1) > .nav-head { font-size: 0; }
+.pf .pf-groups > .pf-group:nth-of-type(1) > .nav-head::before { content: "应用"; font-size: 11.5px; }
+.pf .pf-groups > .pf-group:nth-of-type(2) > .nav-head { font-size: 0; }
+.pf .pf-groups > .pf-group:nth-of-type(2) > .nav-head::before { content: "系统"; font-size: 11.5px; }
+
+.pf .pf-groups > .pf-group:nth-of-type(1) .nav-row:nth-of-type(1) .lbl { font-size: 0; }
+.pf .pf-groups > .pf-group:nth-of-type(1) .nav-row:nth-of-type(1) .lbl::before { content: "通用"; font-size: 13.5px; }
+.pf .pf-groups > .pf-group:nth-of-type(1) .nav-row:nth-of-type(2) .lbl { font-size: 0; }
+.pf .pf-groups > .pf-group:nth-of-type(1) .nav-row:nth-of-type(2) .lbl::before { content: "智能体"; font-size: 13.5px; }
+.pf .pf-groups > .pf-group:nth-of-type(1) .nav-row:nth-of-type(3) .lbl { font-size: 0; }
+.pf .pf-groups > .pf-group:nth-of-type(1) .nav-row:nth-of-type(3) .lbl::before { content: "外观"; font-size: 13.5px; }
+.pf .pf-groups > .pf-group:nth-of-type(1) .nav-row:nth-of-type(4) .lbl { font-size: 0; }
+.pf .pf-groups > .pf-group:nth-of-type(1) .nav-row:nth-of-type(4) .lbl::before { content: "终端"; font-size: 13.5px; }
+.pf .pf-groups > .pf-group:nth-of-type(1) .nav-row:nth-of-type(5) .lbl { font-size: 0; }
+.pf .pf-groups > .pf-group:nth-of-type(1) .nav-row:nth-of-type(5) .lbl::before { content: "命令视图"; font-size: 13.5px; }
+.pf .pf-groups > .pf-group:nth-of-type(1) .nav-row:nth-of-type(6) .lbl { font-size: 0; }
+.pf .pf-groups > .pf-group:nth-of-type(1) .nav-row:nth-of-type(6) .lbl::before { content: "数据库"; font-size: 13.5px; }
+.pf .pf-groups > .pf-group:nth-of-type(1) .nav-row:nth-of-type(7) .lbl { font-size: 0; }
+.pf .pf-groups > .pf-group:nth-of-type(1) .nav-row:nth-of-type(7) .lbl::before { content: "笔记本"; font-size: 13.5px; }
+.pf .pf-groups > .pf-group:nth-of-type(1) .nav-row:nth-of-type(8) .lbl { font-size: 0; }
+.pf .pf-groups > .pf-group:nth-of-type(1) .nav-row:nth-of-type(8) .lbl::before { content: "Carly 助手"; font-size: 13.5px; }
+.pf .pf-groups > .pf-group:nth-of-type(1) .nav-row:nth-of-type(9) .lbl { font-size: 0; }
+.pf .pf-groups > .pf-group:nth-of-type(1) .nav-row:nth-of-type(9) .lbl::before { content: "快捷键"; font-size: 13.5px; }
+.pf .pf-groups > .pf-group:nth-of-type(1) .nav-row:nth-of-type(10) .lbl { font-size: 0; }
+.pf .pf-groups > .pf-group:nth-of-type(1) .nav-row:nth-of-type(10) .lbl::before { content: "Git"; font-size: 13.5px; }
+.pf .pf-groups > .pf-group:nth-of-type(1) .nav-row:nth-of-type(11) .lbl { font-size: 0; }
+.pf .pf-groups > .pf-group:nth-of-type(1) .nav-row:nth-of-type(11) .lbl::before { content: "插件"; font-size: 13.5px; }
+.pf .pf-groups > .pf-group:nth-of-type(2) .nav-row:nth-of-type(1) .lbl { font-size: 0; }
+.pf .pf-groups > .pf-group:nth-of-type(2) .nav-row:nth-of-type(1) .lbl::before { content: "会话"; font-size: 13.5px; }
+.pf .pf-groups > .pf-group:nth-of-type(2) .nav-row:nth-of-type(2) .lbl { font-size: 0; }
+.pf .pf-groups > .pf-group:nth-of-type(2) .nav-row:nth-of-type(2) .lbl::before { content: "主机"; font-size: 13.5px; }
+.pf .pf-groups > .pf-group:nth-of-type(2) .nav-row:nth-of-type(3) .lbl { font-size: 0; }
+.pf .pf-groups > .pf-group:nth-of-type(2) .nav-row:nth-of-type(3) .lbl::before { content: "高级"; font-size: 13.5px; }
+
+/* 设置侧栏底部配置文件按钮与插件状态徽章 */
+.pf.wide .tn-pf-foot > button.btn.tn-pf-json { font-size: 0 !important; }
+.pf.wide .tn-pf-foot > button.btn.tn-pf-json::after { content: "配置文件"; font-size: 11.5px; font-family: var(--sans); white-space: nowrap; }
+.pf .tn-pf-badge.ok { font-size: 0; }
+.pf .tn-pf-badge.ok::before { content: "已就绪"; font-size: 11px; font-weight: 500; white-space: nowrap; }
+.pf .tn-pf-badge.bad { font-size: 0; }
+.pf .tn-pf-badge.bad::before { content: "异常"; font-size: 11px; font-weight: 500; white-space: nowrap; }
+
+/* 设置内容区伪元素统一排版（精确还原原生字号、行高与字重；按钮统一用 inline-flex + ::after 自动撑开宽度） */
+.pf-doc .pf-seg > button { display: inline-flex !important; align-items: center; justify-content: center; }
+.pf-doc h1.pf-title::before { font-size: 20px; line-height: 1.2; font-weight: 550; }
+.pf-doc h2.pf-sec-t::before { font-size: 12.5px; line-height: 1.3; font-weight: 500; }
+.pf-doc .pf-lbl > div.t::before { font-size: 13.5px; line-height: 1.35; font-weight: 500; }
+.pf-doc .pf-lbl > div.h::before { font-size: 12.5px; line-height: 1.45; font-weight: 400; }
+.pf-doc .pf-seg > button::after { font-size: 12.5px; line-height: 1; font-weight: 500; white-space: nowrap; }
+.pf-doc button.btn::before,
+.pf-doc button.btn::after { font-size: 12.5px; line-height: 1; font-weight: 500; white-space: nowrap; }
+.pf-doc button.tn-ct-title::after { font-size: 13.5px; line-height: 1.3; font-weight: 500; }
+.pf-doc p.tn-pf-hint::before { font-size: 12px; line-height: 1.4; font-weight: 400; }
+.pf-doc .kit-empty-body::before { font-size: 12.5px; line-height: 1.45; font-weight: 400; }
+.pf-doc .tn-ps-o span.nm::before { font-size: 12.5px; line-height: 1.3; font-weight: 500; white-space: nowrap; }
+.pf-doc .tn-ps-o span.cap::before { font-size: 11.5px; line-height: 1.35; font-weight: 400; }
+.pf-doc .tn-ps-o span.own::before { font-size: 10.5px; line-height: 1; font-weight: 500; }
+.pf-doc span.t::before { font-size: 13px; line-height: 1.35; font-weight: 500; }
+.pf-doc span.s::before { font-size: 12px; line-height: 1.4; font-weight: 400; }
+.pf-doc dt::before { font-size: 12.5px; line-height: 1.4; font-weight: 500; }
+.pf-doc dd::before { font-size: 12.5px; line-height: 1.4; font-weight: 400; }
+.pf-doc .tn-sd-none::before { font-size: 12px; line-height: 1.4; }
+.pf-doc .pf-rows span::before { font-size: 12.5px; line-height: 1.4; }
+
+
+/* ── 设置页面：通用 (general) ── */
+.pf-nav:has(.pf-group:nth-of-type(1) .nav-row:nth-of-type(1).on) + .pf-scroll > .pf-doc {
+  >header{
+    >h1.pf-title{font-size:0;&::before{content:"通用"}}
+  }
+  >section.pf-sec:nth-of-type(1){
+    >h2.pf-sec-t{font-size:0;&::before{content:"Shell 终端"}}
+    >.pf-rows{
+      >div{
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"默认 Shell"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"本机新建终端块运行的登录 Shell，留空则使用默认登录 Shell（powershell.exe）。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(2){
+    >h2.pf-sec-t{font-size:0;&::before{content:"标签页与分屏"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"新建标签页与分屏默认打开"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"按下 Ctrl+Shift+T / Enter / O 时打开的内容；选择“每次询问”将列出块类型供挑选。Ctrl+Shift+` 始终新建终端块，Ctrl+Shift+A 新建智能体块。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"Shell 终端"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"智能体"}}
+            >button:nth-of-type(3){font-size:0;&::after{content:"每次询问"}}
+          }
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"新标签页起始路径"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"分屏始终沿用被拆分块的当前目录。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"当前目录"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"起始目录"}}
+          }
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"起始目录"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"本机新窗口、新会话以及无继承目录的新标签页的起始路径；留空或目录不存在时从用户主目录启动。"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"跨边缘移动焦点时切换标签页"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在窗口边缘块继续向外移动焦点时自动切换到上/下一个标签页（顶部标签用 ←/→，侧边标签用 ↑/↓）。"}}
+        }
+      }
+      >div:nth-of-type(5){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"向左移动焦点可进入文件面板"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"当文件面板可见时，从最左侧块继续向左移动焦点会聚焦到文件面板。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(3){
+    >h2.pf-sec-t{font-size:0;&::before{content:"选区"}}
+    >.pf-rows{
+      >div{
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"选中即复制"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"鼠标拖动完成文本选择后自动复制到剪贴板。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(4){
+    >h2.pf-sec-t{font-size:0;&::before{content:"链接"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"打开链接方式"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"终端输出与程序视图中的链接打开方式。Ctrl+单击始终有效；设为单击时，拖拽仍可选中文本，vim/tmux 等程序保留普通点击。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"单击"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"Ctrl + 单击"}}
+          }
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"网页链接打开位置"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"按住 Alt 点击可临时切换另一种方式；文件链接始终在 Tern 内打开。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"Tern 内置"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"默认浏览器"}}
+          }
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(5){
+    >h2.pf-sec-t{font-size:0;&::before{content:"文件"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"显示隐藏文件"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在文件面板中显示以点开头的隐藏文件（可用 Ctrl+Shift+. 切换），.git 与 .DS_Store 始终隐藏。"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"显示 Git 忽略的文件"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"被 .gitignore 忽略的文件以淡色显示。"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"搜索包含被忽略的文件"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"文件面板筛选（Ctrl+Shift+F）也会搜索 node_modules 等被忽略的目录。"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"折叠单层空目录"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"仅包含单个子文件夹的目录合并为一行显示，如 crates / tern / src。"}}
+        }
+      }
+      >div:nth-of-type(5){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"自动定位当前编辑的文件"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"文件面板自动高亮并定位当前活动编辑器对应的文件（被忽略目录除外）。"}}
+        }
+      }
+      >div:nth-of-type(6){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"单击预览文件"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"单击文件时浮层预览，点击别处关闭（关闭此项则需双击或按空格打开）。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(6){
+    >h2.pf-sec-t{font-size:0;&::before{content:"保存"}}
+    >.pf-rows{
+      >div{
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"自动保存"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"无需按 Ctrl+S 即可自动保存文件块；无论是否开启，退出时均会保留未保存内容，且不会覆盖外部修改过的文件。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"关闭"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"延迟后自动保存"}}
+            >button:nth-of-type(3){font-size:0;&::after{content:"失去焦点时保存"}}
+          }
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(7){
+    >h2.pf-sec-t{font-size:0;&::before{content:"系统集成"}}
+    >.pf-rows{
+      >div{
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"资源管理器右键集成"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在文件夹右键菜单添加“在 Tern 中打开”，并将 Tern 加入文本、代码、图片、数据库与笔记本的打开方式。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(8){
+    >h2.pf-sec-t{font-size:0;&::before{content:"更新"}}
+    >.pf-rows{
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(2){font-size:0;&::before{content:"更新包来自 build.stencil.so，点击“重启并更新”可立即安装。"}}
+        }
+        >.pf-ctl{
+          >button{font-size:0;&::after{content:"检查更新"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"自动更新"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"每小时自动检查更新并在后台下载，退出时自动安装；关闭后仅在手动点击检查时更新。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(9){
+    >.pf-rows{
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"由 Tern 托管"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"Tern 自动从官方源安装并更新 omp，优先加入终端 PATH 并供 Shell 调用。"}}
+        }
+        >.pf-ctl{
+          >button:nth-of-type(1){font-size:0;&::after{content:"检查更新"}}
+          >button:nth-of-type(2){font-size:0;&::after{content:"停止托管"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(10){
+    >.pf-rows{
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"由 Tern 托管"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"Tern 自动从官方源安装并更新 ovnfs，并优先加入终端 PATH 供 Shell 使用。"}}
+        }
+        >.pf-ctl{
+          >button{font-size:0;&::after{content:"安装 ovnfs"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(11){
+    >.pf-rows{
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"由 Tern 托管"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"Tern 自动从官方源安装并更新 ABKit（omp 浏览器与 Tern 网页视图内核）。"}}
+        }
+        >.pf-ctl{
+          >button{font-size:0;&::after{content:"安装 ABKit"}}
+        }
+      }
+    }
+  }
+}
+
+/* ── 设置页面：智能体 (agents) ── */
+.pf-nav:has(.pf-group:nth-of-type(1) .nav-row:nth-of-type(2).on) + .pf-scroll > .pf-doc {
+  >header{
+    >h1.pf-title{font-size:0;&::before{content:"智能体"}}
+  }
+  >section.pf-sec:nth-of-type(1){
+    >h2.pf-sec-t{font-size:0;&::before{content:"默认设置"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"智能体"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"新建智能体块（Ctrl+Shift+A）默认启动的程序。"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"智能体块打开方式"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"新建智能体块的放置位置。“替换当前”在标签页仅有单个空闲终端时直接替换，否则自动分屏。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"分屏"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"替换当前"}}
+            >button:nth-of-type(3){font-size:0;&::after{content:"新标签页"}}
+          }
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(2){
+    >h2.pf-sec-t{font-size:0;&::before{content:"通知"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"需要处理提醒"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"当 Tern 处于后台且智能体等待你的确认或提问时发送系统通知，点击即可跳回该面板。"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"回合完成提醒"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"当 Tern 处于后台且智能体完成或失败一轮对话时发送系统通知。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(3){
+    >h2.pf-sec-t{font-size:0;&::before{content:"ACP 对话"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"以 ACP 原生对话打开智能体命令"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在 Tern 终端输入 claude、codex 或 copilot 时通过 ACP 打开原生对话界面；输入 `command claude` 可运行其原始 CLI。"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"显示 Claude 思考过程"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在 Claude 对话中显示推理摘要；设置环境变量 MAX_THINKING_TOKENS=0 可关闭。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(4){
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"命令行工具"}}
+        }
+        >.pf-ctl{
+          >button{font-size:0;&::after{content:"安装"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"以 ACP 对话打开 Claude Code"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在 Tern 终端输入 claude 时打开原生对话；关闭则运行 Claude Code 原始界面。"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"使用 Claude Code 自带文件与终端工具"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在 ACP 对话中由 Claude Code 自行读写文件和执行命令，而非经由 Tern 代理。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(5){
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"命令行工具"}}
+        }
+        >.pf-ctl{
+          >button{font-size:0;&::after{content:"安装"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"以 ACP 对话打开 Codex"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在 Tern 终端输入 codex 时打开原生对话；关闭则运行 Codex 原始界面。"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"使用 Codex 自带文件与终端工具"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在 ACP 对话中由 Codex 自行读写文件和执行命令，而非经由 Tern 代理。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(6){
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"命令行工具"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"以 ACP 对话打开 GitHub Copilot"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在 Tern 终端输入 copilot 时打开原生对话；关闭则运行 GitHub Copilot 原始界面。"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"使用 GitHub Copilot 自带文件与终端工具"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在 ACP 对话中由 GitHub Copilot 自行读写文件和执行命令，而非经由 Tern 代理。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(7){
+    >h2.pf-sec-t{font-size:0;&::before{content:"自定义智能体"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"智能体"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"通过 stdio 使用 ACP 协议的自定义命令，环境变量可在 settings.json 中配置。"}}
+        }
+        >.pf-ctl{
+          >button{font-size:0;&::after{content:"添加"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >div{
+          >div{font-size:0;&::before{content:"暂无自定义智能体。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(8){
+    >h2.pf-sec-t{font-size:0;&::before{content:"MCP 服务器"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"服务器列表"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"供 Tern 对话中的智能体调用的工具服务。环境变量与请求头在 settings.json 中设置，支持 ${VAR} 引用环境变量。"}}
+        }
+        >.pf-ctl{
+          >button{font-size:0;&::after{content:"添加"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >div{
+          >div{font-size:0;&::before{content:"暂无 MCP 服务器。"}}
+        }
+      }
+    }
+  }
+}
+
+/* ── 设置页面：外观 (appearance) ── */
+.pf-nav:has(.pf-group:nth-of-type(1) .nav-row:nth-of-type(3).on) + .pf-scroll > .pf-doc {
+  >header{
+    >h1.pf-title{font-size:0;&::before{content:"外观"}}
+  }
+  >section.pf-sec:nth-of-type(1){
+    >h2.pf-sec-t{font-size:0;&::before{content:"主题"}}
+    >.pf-rows{
+      >p{font-size:0;&::before{content:"悬停预览主题，点击应用并保存；按住可透视整个窗口效果。"}}
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"跟随 omp 主题配置"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(2){
+    >h2.pf-sec-t{font-size:0;&::before{content:"外观设置"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"外观模式"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"选择浅色、深色或跟随系统外观。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"跟随系统"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"浅色"}}
+            >button:nth-of-type(3){font-size:0;&::after{content:"深色"}}
+          }
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"字体"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"终端网格字体列表（留空使用内置 Ioskeley Mono Term），右侧可调整终端与代码字号（Ctrl+Shift+= / -）。"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"粗体字体"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"粗体文字使用的字体列表，按优先级排列；留空则沿用主字体对应的粗体。"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"斜体字体"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"斜体文字使用的字体列表；留空则沿用主字体。"}}
+        }
+      }
+      >div:nth-of-type(5){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"粗斜体字体"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"粗斜体文字使用的字体列表；留空则沿用主字体。"}}
+        }
+      }
+      >div:nth-of-type(6){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"字重"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"终端文本基础字重；粗体将在其基础上增加 300（至少 700）。"}}
+        }
+      }
+      >div:nth-of-type(7){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"代码字体"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"编辑器、块和标签等处的等宽字体；留空时编辑器跟随终端字体，其余使用内置字体。"}}
+        }
+      }
+      >div:nth-of-type(8){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"界面字体"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"界面文字字体及字号（应用于标签栏、菜单、块与设置面板）；留空使用内置 Geist。"}}
+        }
+      }
+      >div:nth-of-type(9){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"行高调整"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"附加到终端与代码每行的行高：可填整数像素（如 2、-1）或百分比（如 20%）。"}}
+        }
+      }
+      >div:nth-of-type(10){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"字符列宽调整"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"附加到终端与代码每列的宽度：可填整数像素（如 1、-1）或百分比（如 -7%），字形大小不变。"}}
+        }
+      }
+      >div:nth-of-type(11){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"内边距"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"终端文本与面板边缘的间距（依次为水平与垂直方向，单位 px）。"}}
+        }
+      }
+      >div:nth-of-type(12){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"文字像素对齐"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"将每个字符对齐到整数像素，边缘更锐利；关闭则使用亚像素平滑定位。"}}
+        }
+      }
+      >div:nth-of-type(13){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"对比度校正"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"自动提亮在背景上过暗的程序文本，达到 WCAG AA 可读性标准。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"仅浅色主题"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"始终"}}
+            >button:nth-of-type(3){font-size:0;&::after{content:"关闭"}}
+          }
+        }
+      }
+      >div:nth-of-type(14){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"减弱动态效果"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"减少或关闭界面动画与脉冲特效，并通知内置程序降低动画频率。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"跟随系统"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"开启"}}
+            >button:nth-of-type(3){font-size:0;&::after{content:"关闭"}}
+          }
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(3){
+    >h2.pf-sec-t{font-size:0;&::before{content:"光标"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"光标形状"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"自动模式在终端用方块、编辑器用竖线，并允许 Shell 和 Vim 按模式切换光标形状。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"自动"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"方块"}}
+            >button:nth-of-type(3){font-size:0;&::after{content:"柔和方块"}}
+            >button:nth-of-type(4){font-size:0;&::after{content:"竖线"}}
+            >button:nth-of-type(5){font-size:0;&::after{content:"下划线"}}
+          }
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"允许程序切换光标形状"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"允许 Shell 与 Vim 临时覆盖上方选择的光标形状，退出后恢复；关闭则始终固定。"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"光标闪烁"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"启用光标闪烁，无输入 10 秒后自动停止闪烁。"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"平滑闪烁"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"光标闪烁时采用柔和渐隐渐显效果。"}}
+        }
+      }
+      >div:nth-of-type(5){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"平滑移动（Glide）"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"光标移动时的滑动过渡时长；关闭则直接跳转。"}}
+        }
+        >.pf-ctl{
+          >div{
+            >span{font-size:0;&::before{content:"关闭"}}
+          }
+        }
+      }
+      >div:nth-of-type(6){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"光标拖尾特效"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"光标大幅跳转时的尾迹动画：拉伸、彗星、火焰、火花或残影。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"关闭"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"拉伸拖尾"}}
+            >button:nth-of-type(3){font-size:0;&::after{content:"彗星"}}
+            >button:nth-of-type(4){font-size:0;&::after{content:"火焰"}}
+            >button:nth-of-type(5){font-size:0;&::after{content:"火花"}}
+            >button:nth-of-type(6){font-size:0;&::after{content:"残影"}}
+          }
+        }
+      }
+      >div:nth-of-type(7){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"模式切换脉冲"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"当 Vim 等程序切换光标形状时触发的扩散动效。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"关闭"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"涟漪"}}
+            >button:nth-of-type(3){font-size:0;&::after{content:"扩散"}}
+            >button:nth-of-type(4){font-size:0;&::after{content:"方框涟漪"}}
+            >button:nth-of-type(5){font-size:0;&::after{content:"方框扩散"}}
+          }
+        }
+      }
+      >div:nth-of-type(8){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"在终端中生效"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"终端面板使用上述光标样式。"}}
+        }
+      }
+      >div:nth-of-type(9){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"在对话输入框中生效"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"omp 对话输入框同样使用上述光标样式。"}}
+        }
+      }
+      >div:nth-of-type(10){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"在编辑器中启用输入法"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"编辑代码、纯文本与 Markdown 的文件块同样使用该光标样式。"}}
+        }
+      }
+      >div:nth-of-type(11){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"鼠标指针样式"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"鼠标悬停在终端区域时的指针形状（可点击链接仍显示手型）。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"工字光标"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"箭头"}}
+          }
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(4){
+    >h2.pf-sec-t{font-size:0;&::before{content:"界面风格"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"界面布局"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"控制窗口边框与界面元素的显示程度（Ctrl+Shift+L 循环切换）。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"导轨"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"悬浮"}}
+            >button:nth-of-type(3){font-size:0;&::after{content:"平铺"}}
+            >button:nth-of-type(4){font-size:0;&::after{content:"工作室"}}
+          }
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"窗口材质"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"设置窗口背景的表面材质效果。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"液态玻璃"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"透明毛玻璃"}}
+            >button:nth-of-type(3){font-size:0;&::after{content:"纯色"}}
+          }
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"不透明度"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"控制透明材质下终端背景遮挡桌面的程度。"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"背景模糊"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"开启透明毛玻璃材质时是否模糊窗口后的桌面内容。"}}
+        }
+      }
+      >div:nth-of-type(5){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"面板间距风格"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"控制各面板紧贴平铺或以独立卡片呈现。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"卡片岛屿"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"紧凑"}}
+          }
+        }
+      }
+      >div:nth-of-type(6){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"标签栏位置"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"将标签栏显示在顶部，或置于侧边并展示全部会话标签（Ctrl+Shift+\\ 切换）。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"顶部"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"侧边"}}
+          }
+        }
+      }
+      >div:nth-of-type(7){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"自动隐藏侧边标签栏"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"侧边标签栏收起至窗口边缘，鼠标移入时滑出（Ctrl+Alt+Shift+\\ 切换）。"}}
+        }
+      }
+      >div:nth-of-type(8){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"在侧边标签栏滚动以切换标签"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在侧边标签栏使用滚轮或触控板时直接切换上/下一个标签页，而非滚动列表。"}}
+        }
+      }
+      >div:nth-of-type(9){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"跨会话连续编号侧边标签"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"侧边标签编号与快捷键跨所有会话统一递增；关闭则仅对当前会话内标签编号。"}}
+        }
+      }
+      >div:nth-of-type(10){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"使用系统标题栏"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在标签栏上方显示系统原生标题栏与窗口控制按钮，替代 Tern 自绘按钮。"}}
+        }
+      }
+      >div:nth-of-type(11){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"自定义程序图标"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"覆盖标签与面板上的程序图标，按 program=icon 格式填写（如 codex=provider-openai, nvim=sparkle）。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(5){
+    >h2.pf-sec-t{font-size:0;&::before{content:"面板与分屏"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"面板标题栏"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"显示含拆分、悬浮、缩放和关闭按钮的面板标题栏（从不、仅分屏时或始终显示）。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"从不"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"分屏时"}}
+            >button:nth-of-type(3){font-size:0;&::after{content:"始终"}}
+          }
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"淡化非聚焦面板"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"分屏时降低非当前焦点面板的对比度以突出当前面板；关闭则保持一致亮度。"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"底部小组件"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"窗口底部状态栏小组件：目录与分支、上一条命令、系统监控、omp 用量及插件组件。"}}
+        }
+        >.pf-ctl{
+          >button{font-size:0;&::after{content:"编辑小组件…"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"小组件栏样式"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"控制底部小组件之间的分隔外观：留白、胶囊、描边或细分隔线。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"极简"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"胶囊"}}
+            >button:nth-of-type(3){font-size:0;&::after{content:"描边"}}
+            >button:nth-of-type(4){font-size:0;&::after{content:"分隔线"}}
+          }
+        }
+      }
+      >div:nth-of-type(5){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"原生绘制 tmux 状态栏"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"将面板内运行的 tmux 状态栏以 Tern 原生风格绘制，并支持点击切换窗口。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(6){
+    >h2.pf-sec-t{font-size:0;&::before{content:"程序视图"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"对话排版风格"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"设置 omp 对话展示样式：阅读模式（居中栏）、时间轴（步骤线）或控制台风格。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"阅读模式"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"时间轴"}}
+            >button:nth-of-type(3){font-size:0;&::after{content:"控制台"}}
+          }
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"时间轴栏宽"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"调整时间轴（Spine）模式下的内容列宽。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"标准"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"较宽"}}
+            >button:nth-of-type(3){font-size:0;&::after{content:"全宽"}}
+          }
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"omp 设置界面样式"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"设置 omp 中执行 /settings 时的展示形式：居中弹窗或对话侧边面板。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"窗口"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"对话侧边栏"}}
+          }
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"折叠工具调用记录"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"回复生成后将连续的工具调用和思考过程折叠为一行摘要。"}}
+        }
+      }
+      >div:nth-of-type(5){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"默认展开思考过程"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"完整展开 omp 的思考过程，不折叠为单行摘要。"}}
+        }
+      }
+      >div:nth-of-type(6){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"上下文用量进度条"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在 omp 输入框顶部显示上下文窗口占用进度条，点击可查看构成明细。"}}
+        }
+      }
+      >div:nth-of-type(7){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"始终保持输入框展开"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"切到其他面板时保持 omp 输入框完整展开；关闭则自动折叠为单行以腾出阅读空间。"}}
+        }
+      }
+      >div:nth-of-type(8){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"子智能体托盘"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在输入框上方以卡片形式展示 omp 正在运行的子智能体与后台任务。"}}
+        }
+      }
+      >div:nth-of-type(9){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"输入框模式"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"设置 omp 输入框的编辑视图：Markdown 实时所见即所得，纯文本则原样显示标记符号。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"纯文本"}}
+          }
+        }
+      }
+      >div:nth-of-type(10){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"Markdown 标题样式"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"标记式保留正文大小并显示淡色 # 号；分级字号按标题级别放大；自动模式随对话风格切换。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"自动"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"标记式"}}
+            >button:nth-of-type(3){font-size:0;&::after{content:"分级字号"}}
+          }
+        }
+      }
+      >div:nth-of-type(11){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"代码块自动换行"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"回复与代码块中的长行自动折行；关闭则保持单行横向滚动。"}}
+        }
+      }
+      >div:nth-of-type(12){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"差异对比展示方式"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"控制原生视图中代码差异的显示方式；面板足够宽时“分屏”将左右并排对比。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"内联"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"分屏"}}
+          }
+        }
+      }
+      >div:nth-of-type(13){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"制表符宽度"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"代码与差异视图中每个 Tab 占用的列数。"}}
+        }
+      }
+    }
+  }
+}
+
+/* ── 设置页面：终端 (terminal) ── */
+.pf-nav:has(.pf-group:nth-of-type(1) .nav-row:nth-of-type(4).on) + .pf-scroll > .pf-doc {
+  >header{
+    >h1.pf-title{font-size:0;&::before{content:"终端"}}
+  }
+  >section.pf-sec:nth-of-type(1){
+    >h2.pf-sec-t{font-size:0;&::before{content:"滚动"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"平滑滚动"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"让终端、文件、列表和画板的鼠标滚轮滚动更顺滑（遵循“减弱动态效果”设置）。"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"弹性过滚回弹"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"滚到终端、文件、列表或画板边界时呈现弹性回弹效果；关闭则直接停在边界。"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"滚动条显示策略"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"控制终端右侧可拖拽滚动条的显示时机；自动模式仅在滚动或鼠标靠近右侧时显示。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"自动"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"始终"}}
+            >button:nth-of-type(3){font-size:0;&::after{content:"从不"}}
+          }
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"滚动速度"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"相对于系统默认速率的滚轮与触控板滚动倍率。"}}
+        }
+      }
+      >div:nth-of-type(5){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"滚动缓冲区行数"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"每个终端保留的历史输出行数（在内存中压缩存储）。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(2){
+    >h2.pf-sec-t{font-size:0;&::before{content:"程序视图"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"原生程序视图（TSP）"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"支持 Tern Surface Protocol 的程序（如 omp）使用原生组件渲染；关闭则退回传统字符网格。"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"原生命令输出视图"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"将 git、ls、cargo、docker 等常见命令输出渲染为结构化视图，随时可一键切回原始输出。"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"超过以下行数自动折叠输出"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"命令结束后输出超过该行数时自动折叠中间部分；设为“从不”则完整保留。"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"原生补全弹窗"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"以原生浮层菜单展示 Shell 的 Tab 自动补全候选列表。"}}
+        }
+      }
+      >div:nth-of-type(5){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"原生输入框编辑快捷键"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在 omp 输入框中支持 Shift+方向键选区、拖拽选区及 Ctrl+X/C/A/Z 等原生编辑操作。"}}
+        }
+      }
+      >div:nth-of-type(6){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"对话输入自动更正"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在 omp 与智能体输入框中启用拼写更正与词语联想；关闭则原样输入。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(3){
+    >h2.pf-sec-t{font-size:0;&::before{content:"提示符"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"原生 Shell 提示符"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"由 Tern 原生绘制 zsh / bash / fish / nushell / PowerShell 提示符，缩放窗口不乱行（对新建块生效）。"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"提示符预设"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"选择下方各提示符样式的初始预设；除 p10k 配置仅限 zsh 外，其余预设支持所有主流 Shell。"}}
+        }
+        >.pf-ctl{
+          >div{
+            >button:nth-of-type(1){
+              >span:nth-of-type(1){
+                >span:nth-of-type(1){font-size:0;&::before{content:"使用 p10k 配置"}}
+                >span:nth-of-type(2){font-size:0;&::before{content:"按你的 ~/.p10k.zsh 样式渲染"}}
+              }
+            }
+          }
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"配色方案"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"各提示符模块的配色，自动适配浅色与深色主题。"}}
+        }
+        >.pf-ctl{
+          >div{
+            >button:nth-of-type(2){
+              >span:nth-of-type(1){
+                >span:nth-of-type(2){font-size:0;&::before{content:"预设"}}
+              }
+            }
+          }
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"填充形式"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"模块以彩色底块显示，或仅以彩色文字显示。"}}
+        }
+        >.pf-ctl{
+          >div{
+            >button:nth-of-type(1){
+              >span:nth-of-type(1){
+                >span:nth-of-type(1){font-size:0;&::before{content:"色块"}}
+                >span:nth-of-type(2){font-size:0;&::before{content:"预设"}}
+              }
+            }
+            >button:nth-of-type(2){
+              >span:nth-of-type(1){
+                >span{font-size:0;&::before{content:"纯文字"}}
+              }
+            }
+          }
+        }
+      }
+      >div:nth-of-type(5){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"光标形状"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"色块边缘与分隔形状（仅在“色块”填充时生效）。"}}
+        }
+        >.pf-ctl{
+          >div{
+            >button:nth-of-type(1){
+              >span:nth-of-type(1){
+                >span:nth-of-type(1){font-size:0;&::before{content:"圆角"}}
+                >span:nth-of-type(2){font-size:0;&::before{content:"预设"}}
+              }
+            }
+            >button:nth-of-type(2){
+              >span:nth-of-type(1){
+                >span{font-size:0;&::before{content:"胶囊"}}
+              }
+            }
+            >button:nth-of-type(3){
+              >span:nth-of-type(1){
+                >span{font-size:0;&::before{content:"箭头"}}
+              }
+            }
+            >button:nth-of-type(4){
+              >span:nth-of-type(1){
+                >span{font-size:0;&::before{content:"斜角"}}
+              }
+            }
+            >button:nth-of-type(5){
+              >span:nth-of-type(1){
+                >span{font-size:0;&::before{content:"直角"}}
+              }
+            }
+            >button:nth-of-type(6){
+              >span:nth-of-type(1){
+                >span{font-size:0;&::before{content:"标签块"}}
+              }
+            }
+            >button:nth-of-type(7){
+              >span:nth-of-type(1){
+                >span{font-size:0;&::before{content:"渐变"}}
+              }
+            }
+          }
+        }
+      }
+      >div:nth-of-type(6){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"边框连线"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"连接提示符栏与下方输入行的引导线样式。"}}
+        }
+        >.pf-ctl{
+          >div{
+            >button:nth-of-type(1){
+              >span:nth-of-type(1){
+                >span{font-size:0;&::before{content:"无"}}
+              }
+            }
+            >button:nth-of-type(2){
+              >span:nth-of-type(1){
+                >span:nth-of-type(1){font-size:0;&::before{content:"圆角"}}
+                >span:nth-of-type(2){font-size:0;&::before{content:"预设"}}
+              }
+            }
+            >button:nth-of-type(3){
+              >span:nth-of-type(1){
+                >span{font-size:0;&::before{content:"直角"}}
+              }
+            }
+          }
+        }
+      }
+      >div:nth-of-type(7){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"右侧封口线"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在提示符右端绘制封口折线（开启边框连线时生效）。"}}
+        }
+        >.pf-ctl{
+          >div{
+            >button:nth-of-type(1){
+              >span:nth-of-type(1){
+                >span:nth-of-type(1){font-size:0;&::before{content:"开启"}}
+                >span:nth-of-type(2){font-size:0;&::before{content:"预设"}}
+              }
+            }
+            >button:nth-of-type(2){
+              >span:nth-of-type(1){
+                >span{font-size:0;&::before{content:"关闭"}}
+              }
+            }
+          }
+        }
+      }
+      >div:nth-of-type(8){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"左右间距填充"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"提示符左右两侧模块之间的空白填充样式。"}}
+        }
+        >.pf-ctl{
+          >div{
+            >button:nth-of-type(1){
+              >span:nth-of-type(1){
+                >span{font-size:0;&::before{content:"无"}}
+              }
+            }
+            >button:nth-of-type(2){
+              >span:nth-of-type(1){
+                >span:nth-of-type(1){font-size:0;&::before{content:"实线"}}
+                >span:nth-of-type(2){font-size:0;&::before{content:"预设"}}
+              }
+            }
+            >button:nth-of-type(3){
+              >span:nth-of-type(1){
+                >span{font-size:0;&::before{content:"点线"}}
+              }
+            }
+          }
+        }
+      }
+      >div:nth-of-type(9){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"提示符符号"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"输入位置前的引导符号，上条命令出错时变为红色。"}}
+        }
+        >.pf-ctl{
+          >div{
+            >button:nth-of-type(1){
+              >span:nth-of-type(1){
+                >span:nth-of-type(2){font-size:0;&::before{content:"预设"}}
+              }
+            }
+          }
+          >label{
+            >span{font-size:0;&::before{content:"自定义"}}
+          }
+        }
+      }
+      >div:nth-of-type(10){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"分隔符"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"模块之间的分隔形式（仅在“纯文字”填充时生效）。"}}
+        }
+        >.pf-ctl{
+          >div{
+            >button:nth-of-type(1){
+              >span:nth-of-type(1){
+                >span:nth-of-type(1){font-size:0;&::before{content:"空格"}}
+                >span:nth-of-type(2){font-size:0;&::before{content:"预设"}}
+              }
+            }
+            >button:nth-of-type(2){
+              >span:nth-of-type(1){
+                >span{font-size:0;&::before{content:"连接词"}}
+              }
+            }
+            >button:nth-of-type(3){
+              >span:nth-of-type(1){
+                >span{font-size:0;&::before{content:"圆点"}}
+              }
+            }
+            >button:nth-of-type(4){
+              >span:nth-of-type(1){
+                >span{font-size:0;&::before{content:"竖线"}}
+              }
+            }
+          }
+        }
+      }
+      >div:nth-of-type(11){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"Git 状态格式"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"设置 Git 分支与变更状态的展示格式。"}}
+        }
+        >.pf-ctl{
+          >div{
+            >button:nth-of-type(1){
+              >span:nth-of-type(1){
+                >span:nth-of-type(1){font-size:0;&::before{content:"行/词/字节统计"}}
+                >span:nth-of-type(2){font-size:0;&::before{content:"预设"}}
+              }
+            }
+            >button:nth-of-type(2){
+              >span:nth-of-type(1){
+                >span{font-size:0;&::before{content:"符号"}}
+              }
+            }
+            >button:nth-of-type(3){
+              >span:nth-of-type(1){
+                >span{font-size:0;&::before{content:"紧凑"}}
+              }
+            }
+            >button:nth-of-type(4){
+              >span:nth-of-type(1){
+                >span{font-size:0;&::before{content:"仅分支名"}}
+              }
+            }
+          }
+        }
+      }
+      >div:nth-of-type(12){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"目录路径格式"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"设置当前工作目录的显示层级长度。"}}
+        }
+        >.pf-ctl{
+          >div{
+            >button:nth-of-type(1){
+              >span:nth-of-type(1){
+                >span:nth-of-type(1){font-size:0;&::before{content:"完整路径"}}
+                >span:nth-of-type(2){font-size:0;&::before{content:"预设"}}
+              }
+            }
+            >button:nth-of-type(2){
+              >span:nth-of-type(1){
+                >span{font-size:0;&::before{content:"从仓库根目录起"}}
+              }
+            }
+            >button:nth-of-type(3){
+              >span:nth-of-type(1){
+                >span{font-size:0;&::before{content:"最后三级"}}
+              }
+            }
+            >button:nth-of-type(4){
+              >span:nth-of-type(1){
+                >span{font-size:0;&::before{content:"仅当前目录名"}}
+              }
+            }
+          }
+        }
+      }
+      >div:nth-of-type(13){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"模块图标"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"是否显示各模块的 Nerd Font 图标。"}}
+        }
+        >.pf-ctl{
+          >div{
+            >button:nth-of-type(1){
+              >span:nth-of-type(1){
+                >span:nth-of-type(1){font-size:0;&::before{content:"开启"}}
+                >span:nth-of-type(2){font-size:0;&::before{content:"预设"}}
+              }
+            }
+            >button:nth-of-type(2){
+              >span:nth-of-type(1){
+                >span{font-size:0;&::before{content:"关闭"}}
+              }
+            }
+          }
+        }
+      }
+      >div:nth-of-type(14){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"时钟格式"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"设置时间模块的显示格式。"}}
+        }
+        >.pf-ctl{
+          >div{
+            >button:nth-of-type(1){
+              >span:nth-of-type(1){
+                >span{font-size:0;&::before{content:"24 小时制"}}
+              }
+            }
+            >button:nth-of-type(2){
+              >span:nth-of-type(1){
+                >span:nth-of-type(1){font-size:0;&::before{content:"24 小时制（含秒）"}}
+                >span:nth-of-type(2){font-size:0;&::before{content:"预设"}}
+              }
+            }
+            >button:nth-of-type(3){
+              >span:nth-of-type(1){
+                >span{font-size:0;&::before{content:"12 小时制"}}
+              }
+            }
+          }
+        }
+      }
+      >div:nth-of-type(15){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"提示符前空行"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在每条命令输出与下一个提示符之间插入一个空行。"}}
+        }
+      }
+      >div:nth-of-type(16){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"提示符模块排列"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"配置左右两侧显示的模块及顺序，拖拽可排序或跨侧移动，立即应用于所有面板。"}}
+        }
+        >.pf-ctl{
+          >div{
+            >div:nth-of-type(2){
+              >div:nth-of-type(1){
+                >div:nth-of-type(1){
+                  >span:nth-of-type(1){font-size:0;&::before{content:"左侧"}}
+                }
+                >div:nth-of-type(2){
+                  >div{font-size:0;&::before{content:"左侧暂无模块"}}
+                }
+              }
+              >div:nth-of-type(2){
+                >div:nth-of-type(1){
+                  >span:nth-of-type(1){font-size:0;&::before{content:"右侧"}}
+                }
+                >div:nth-of-type(2){
+                  >div{font-size:0;&::before{content:"右侧暂无模块"}}
+                }
+              }
+            }
+            >div:nth-of-type(3){
+              >div:nth-of-type(1){
+                >.pf-seg{
+                  >button:nth-of-type(1){font-size:0;&::after{content:"左侧"}}
+                  >button:nth-of-type(2){font-size:0;&::after{content:"右侧"}}
+                }
+              }
+            }
+            >div:nth-of-type(4){
+              >span{font-size:0;&::before{content:"使用 p10k 配置时沿用其自身模块；切换其他样式后以下模块配置生效。"}}
+            }
+          }
+        }
+      }
+      >div:nth-of-type(17){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"折叠历史提示符"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"命令执行后将旧提示符收缩为精简符号（类似 p10k 瞬态提示符）；关闭则保留淡色完整栏。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(4){
+    >h2.pf-sec-t{font-size:0;&::before{content:"安全"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"允许程序写入剪贴板（OSC 52）"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"vim、tmux 及 SSH 远程程序通过 OSC 52 复制内容；设为“询问”会先展示待复制文本。程序永远无法读取剪贴板。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"允许"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"询问"}}
+            >button:nth-of-type(3){font-size:0;&::after{content:"从不"}}
+          }
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"程序内超链接（OSC 8）"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"控制程序输出的 OSC 8 隐藏链接；设为“询问”在打开前显示真实网址，设为“从不”则忽略。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"允许"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"询问"}}
+            >button:nth-of-type(3){font-size:0;&::after{content:"从不"}}
+          }
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"程序通知（OSC 9/99/777）"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"允许终端程序发送的通知显示为浮层与待处理事项，可在 settings.json 中过滤。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(5){
+    >h2.pf-sec-t{font-size:0;&::before{content:"粘贴"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"高风险粘贴确认"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"粘贴包含控制字符或多行可执行命令时先弹窗确认，并提供清理选项。"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"自动清理控制字符"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"不弹窗直接将粘贴内容中的控制字符转为可见符号。"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"粘贴换行不触发回车执行"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"粘贴多行文本时将换行转换为安全换行符，避免逐行立即执行。"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"大段文本粘贴确认"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"粘贴超过 16 KB 的内容前先弹出确认。"}}
+        }
+      }
+      >div:nth-of-type(5){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"粘贴网址自动加引号"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在 Shell 提示符粘贴 URL 时自动加引号，防止 ? 和 & 被 Shell 解析。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(6){
+    >h2.pf-sec-t{font-size:0;&::before{content:"内置信息"}}
+    >.pf-rows{
+      >dl{
+        >dt:nth-of-type(1){font-size:0;&::before{content:"回退字体栈"}}
+        >dt:nth-of-type(2){font-size:0;&::before{content:"行高计算方式"}}
+        >dd:nth-of-type(2){font-size:0;&::before{content:"字体默认行高 + 外观 › 行高调整"}}
+        >dt:nth-of-type(3){font-size:0;&::before{content:"粗体渲染方式"}}
+        >dd:nth-of-type(3){font-size:0;&::before{content:"高亮色渲染"}}
+      }
+    }
+  }
+}
+
+/* ── 设置页面：命令视图 (lenses) ── */
+.pf-nav:has(.pf-group:nth-of-type(1) .nav-row:nth-of-type(5).on) + .pf-scroll > .pf-doc {
+  >header{
+    >h1.pf-title{font-size:0;&::before{content:"命令视图"}}
+  }
+  >section.pf-sec:nth-of-type(1){
+    >h2.pf-sec-t{font-size:0;&::before{content:"Git"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"仓库状态"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"差异对比（Diff）"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"分支列表"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"标签列表"}}
+        }
+      }
+      >div:nth-of-type(5){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"远程仓库"}}
+        }
+      }
+      >div:nth-of-type(6){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"拉取与推送"}}
+        }
+      }
+      >div:nth-of-type(7){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"已跟踪文件"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(2){
+    >h2.pf-sec-t{font-size:0;&::before{content:"Git 历史"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"提交日志"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"提交详情与文件"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"引用日志（Reflog）"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"贮藏列表（Stash）"}}
+        }
+      }
+      >div:nth-of-type(5){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"逐行追溯（Blame）"}}
+        }
+      }
+      >div:nth-of-type(6){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"作者贡献统计"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(3){
+    >h2.pf-sec-t{font-size:0;&::before{content:"GitHub 与 Jujutsu"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"GitHub 列表"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"GitHub 详情"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"Jujutsu 日志"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"Jujutsu 状态"}}
+        }
+      }
+      >div:nth-of-type(5){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"Jujutsu 差异"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(4){
+    >h2.pf-sec-t{font-size:0;&::before{content:"文件"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"目录列表"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"目录树"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"文件查找结果"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"磁盘占用统计"}}
+        }
+      }
+      >div:nth-of-type(5){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"行/词/字节统计"}}
+        }
+      }
+      >div:nth-of-type(6){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"文件属性详情"}}
+        }
+      }
+      >div:nth-of-type(7){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"命令路径查询"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(5){
+    >h2.pf-sec-t{font-size:0;&::before{content:"查看器"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"文件内容预览"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"实时追踪日志"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"差异对比（Diff）"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"JSON 与 YAML"}}
+        }
+      }
+      >div:nth-of-type(5){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"数据库查询结果"}}
+        }
+      }
+      >div:nth-of-type(6){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"表格输出"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(6){
+    >h2.pf-sec-t{font-size:0;&::before{content:"搜索"}}
+    >.pf-rows{
+      >div{
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"文本搜索匹配"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(7){
+    >h2.pf-sec-t{font-size:0;&::before{content:"构建工具"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"Cargo 构建"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"Cargo 测试"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"Cargo 依赖树"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"编译器诊断信息"}}
+        }
+      }
+      >div:nth-of-type(5){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"构建任务运行器"}}
+        }
+      }
+      >div:nth-of-type(6){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"Swift 与 Xcode"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(8){
+    >h2.pf-sec-t{font-size:0;&::before{content:"JavaScript"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"类型检查错误"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"代码检查与格式化"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"测试结果"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"依赖安装进度"}}
+        }
+      }
+      >div:nth-of-type(5){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"包管理与脚本"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(9){
+    >h2.pf-sec-t{font-size:0;&::before{content:"Python 与 Go"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"Python 测试"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"Python 静态检查"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"Python 包管理"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"Go 测试"}}
+        }
+      }
+      >div:nth-of-type(5){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"Go 构建与检查"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(10){
+    >h2.pf-sec-t{font-size:0;&::before{content:"系统"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"进程列表"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"磁盘挂载空间"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"环境变量"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"网络端口与套接字"}}
+        }
+      }
+      >div:nth-of-type(5){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"系统负载与内存"}}
+        }
+      }
+      >div:nth-of-type(6){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"系统信息"}}
+        }
+      }
+      >div:nth-of-type(7){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"Shell 历史命令"}}
+        }
+      }
+      >div:nth-of-type(8){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"日历"}}
+        }
+      }
+      >div:nth-of-type(9){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"Homebrew"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(11){
+    >h2.pf-sec-t{font-size:0;&::before{content:"网络"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"Ping 连通性测试"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"HTTP 请求"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"DNS 查询"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"路由追踪"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(12){
+    >h2.pf-sec-t{font-size:0;&::before{content:"容器与云服务"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"容器与镜像"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"容器构建与拉推"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"容器日志"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"Kubernetes 资源"}}
+        }
+      }
+      >div:nth-of-type(5){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"Kubernetes 详情"}}
+        }
+      }
+      >div:nth-of-type(6){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"Helm 发布列表"}}
+        }
+      }
+      >div:nth-of-type(7){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"Terraform 执行计划"}}
+        }
+      }
+      >div:nth-of-type(8){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"云平台 CLI"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(13){
+    >h2.pf-sec-t{font-size:0;&::before{content:"文档"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"Man 手册页"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"tldr 速查页"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"命令行帮助"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"systemd 服务与日志"}}
+        }
+      }
+    }
+  }
+}
+
+/* ── 设置页面：数据库 (databases) ── */
+.pf-nav:has(.pf-group:nth-of-type(1) .nav-row:nth-of-type(6).on) + .pf-scroll > .pf-doc {
+  >header{
+    >h1.pf-title{font-size:0;&::before{content:"数据库"}}
+  }
+  >section.pf-sec:nth-of-type(1){
+    >h2.pf-sec-t{font-size:0;&::before{content:"通用"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"默认位置"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"新建或打开数据库时的默认起始目录。"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"指定目录"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"设为“始终使用此位置”或“本次会话位置”时的初始目录。"}}
+        }
+        >.pf-ctl{
+          >button{font-size:0;&::after{content:"选择…"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"最近文件数量"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"“打开最近”菜单显示的数据库历史条数。"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"只读最近文件快捷键"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"启用 Ctrl+Alt+Shift+1~9 以相反的只读模式打开最近数据库。"}}
+        }
+      }
+      >div:nth-of-type(5){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"恢复会话时自动重新打开数据库"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"恢复数据库块时立即重新加载对应文件；关闭则需手动点击打开。"}}
+        }
+      }
+      >div:nth-of-type(6){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"保存项目时询问 SQL 标签页"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"保存数据库项目时询问是否将各 SQL 标签页内容一并保存。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(2){
+    >h2.pf-sec-t{font-size:0;&::before{content:"数据库文件类型"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"文件类型筛选器"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"打开/保存对话框中的文件类型过滤规则，多个通配符用空格分隔。"}}
+        }
+        >.pf-ctl{
+          >button{font-size:0;&::after{content:"添加"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(3){
+    >h2.pf-sec-t{font-size:0;&::before{content:"数据库"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"默认文本编码"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"新建 SQLite 数据库采用的字符编码。"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"启用外键约束"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"打开数据库时自动开启外键完整性检查。"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"单行显示建表语句"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在结构视图中将每条 CREATE 语句压缩为单行显示。"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"预取分块大小"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"数据浏览器每次预加载的行数。"}}
+        }
+      }
+      >div:nth-of-type(5){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"默认字段类型"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"编辑表结构时新增列的默认数据类型。"}}
+        }
+      }
+      >div:nth-of-type(6){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"结构视图字号"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"数据库结构树的基准字号，随 Tern 全局字号等比缩放。"}}
+        }
+      }
+      >div:nth-of-type(7){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"自动刷新只读数据库"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"以只读模式打开的数据库在磁盘文件变更时自动重载。"}}
+        }
+      }
+      >div:nth-of-type(8){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"不询问未知排序规则"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"遇到 SQLite 未知的排序规则时自动使用默认替代规则，不再弹窗询问。"}}
+        }
+      }
+      >div:nth-of-type(9){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"打开后自动执行的 SQL"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"每次以可写方式打开数据库后自动执行的 SQL 语句（如 PRAGMA 设置）。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(4){
+    >h2.pf-sec-t{font-size:0;&::before{content:"数据浏览器"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"字体"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"数据表格使用的字体；留空沿用 Tern 等宽字体。"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"字号"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"数据表格与单元格编辑器的基准字号，随界面字号缩放。"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"最大行数限制"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"表格或查询结果最多在网格中显示的行数。"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"单元格显示字符上限"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"单个单元格截断前最多显示的字符数。"}}
+        }
+      }
+      >div:nth-of-type(5){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"补全与统计行数阈值"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"超过此行数后，筛选器停止自动补全值且停止自动列汇总。"}}
+        }
+      }
+      >div:nth-of-type(6){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"在单元格中预览图片"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"包含图片二进制数据的单元格直接渲染缩略图。"}}
+        }
+      }
+      >div:nth-of-type(7){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"单元格内自动换行"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"长文本在单元格内折行显示。"}}
+        }
+      }
+      >div:nth-of-type(8){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"筛选防抖延迟"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"停止输入后延迟多久触发筛选查询。"}}
+        }
+      }
+      >div:nth-of-type(9){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"转义字符"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在筛选条件中置于 % 或 _ 前用于字面匹配。"}}
+        }
+      }
+      >div:nth-of-type(10){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"NULL 显示文字"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"空值（NULL）单元格显示的占位文字。"}}
+        }
+      }
+      >div:nth-of-type(11){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"BLOB 显示文字"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"二进制（BLOB）单元格显示的占位文字。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(5){
+    >h2.pf-sec-t{font-size:0;&::before{content:"单元格配色"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"NULL 单元格"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"分别设置前景色与背景色（#rrggbb 格式），留空沿用主题色。"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"BLOB 单元格"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"分别设置前景色与背景色（#rrggbb 格式），留空沿用主题色。"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"普通单元格"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"分别设置前景色与背景色（#rrggbb 格式），留空沿用主题色。"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"格式化单元格"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"分别设置前景色与背景色（#rrggbb 格式），留空沿用主题色。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(6){
+    >h2.pf-sec-t{font-size:0;&::before{content:"单元格编辑"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"紧凑缩进"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"格式化 JSON 和 XML 时使用更紧凑的空格缩进。"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"排序 JSON 键名"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"格式化 JSON 时按字母顺序排列对象键名。"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"自动切换编辑模式"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"根据单元格内容自动切换为纯文本、JSON、XML 或图片模式。"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"自动换行"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"单元格编辑器中的长行自动折行。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(7){
+    >h2.pf-sec-t{font-size:0;&::before{content:"从结构树拖拽"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"生成 SELECT 语句"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"将表或列拖入编辑器时生成 SELECT 查询。"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"生成 INSERT 语句"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"拖拽表或列时生成 INSERT 插入语句。"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"使用限定表名"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"生成的名称附带模式前缀（如 main.users）。"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"添加标识符引号"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"按 SQL 编辑器设置自动为表名和列名加引号。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(8){
+    >h2.pf-sec-t{font-size:0;&::before{content:"SQL 编辑器"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"字体"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"SQL 编辑器字体；留空沿用 Tern 等宽字体。"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"字号"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"SQL 编辑器的基准字号，随界面字号缩放。"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"结果与日志字号"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"查询消息与 SQL 日志的基准字号，随终端字号缩放。"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"Tab 缩进宽度"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"每个制表符的列宽。"}}
+        }
+      }
+      >div:nth-of-type(5){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"使用 Tab 缩进"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"按 Tab 键插入制表符；关闭则插入空格。"}}
+        }
+      }
+      >div:nth-of-type(6){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"自动换行"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"设置 SQL 编辑器中长行的换行方式。"}}
+        }
+        >.pf-ctl{
+          >button{
+            >span{font-size:0;&::before{content:"从不"}}
+          }
+        }
+      }
+      >div:nth-of-type(7){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"标识符引号风格"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"生成的 SQL 中包裹表名和列名的引号样式。"}}
+        }
+      }
+      >div:nth-of-type(8){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"SQL 代码补全"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"输入时自动补全 SQL 关键字、表名与列名。"}}
+        }
+      }
+      >div:nth-of-type(9){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"关键字大小写"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"自动补全插入 SQL 关键字时采用大写或小写。"}}
+        }
+      }
+      >div:nth-of-type(10){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"语法错误标记"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在编辑器中高亮标出执行失败的 SQL 语句。"}}
+        }
+      }
+      >div:nth-of-type(11){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"左右并排显示结果"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"SQL 编辑器与查询结果左右分栏；关闭则上下排列。"}}
+        }
+      }
+      >div:nth-of-type(12){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"标签页显示关闭按钮"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在每个 SQL 标签页上显示关闭图标。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(9){
+    >h2.pf-sec-t{font-size:0;&::before{content:"扩展"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"扩展"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"打开每个数据库时自动加载的 SQLite 扩展库。"}}
+        }
+        >.pf-ctl{
+          >button{font-size:0;&::after{content:"添加…"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >div{
+          >div{font-size:0;&::before{content:"暂无扩展：数据库将仅使用 SQLite 内置函数打开。"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"禁用内置 REGEXP 函数"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"禁用默认 REGEXP 函数，以便由自定义扩展提供实现。"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"允许在 SQL 中调用 load_extension"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"允许 SQL 语句自行加载扩展动态库，请仅对受信任的数据库开启。"}}
+        }
+      }
+    }
+  }
+}
+
+/* ── 设置页面：笔记本 (notebooks) ── */
+.pf-nav:has(.pf-group:nth-of-type(1) .nav-row:nth-of-type(7).on) + .pf-scroll > .pf-doc {
+  >header{
+    >h1.pf-title{font-size:0;&::before{content:"笔记本"}}
+  }
+  >section.pf-sec:nth-of-type(1){
+    >h2.pf-sec-t{font-size:0;&::before{content:"内核"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"本机 Python 解释器"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"本机笔记本内核默认使用的 Python 路径；留空时自动检测虚拟环境或 python3。"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"打开笔记本时立即启动内核"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"关闭则延迟到首次运行单元格或代码补全时再启动内核。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(2){
+    >h2.pf-sec-t{font-size:0;&::before{content:"运行"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"出错后停止后续运行"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"当某个单元格报错时，中止队列中剩余单元格的执行。"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"重启内核前确认"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"重启内核会清空所有内存变量，操作前弹出确认提示。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(3){
+    >h2.pf-sec-t{font-size:0;&::before{content:"编辑"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"显示行号"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在代码单元格中显示行号（按 L 可单独切换）。"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"代码块自动换行"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"代码单元格中的长行自动换行（Markdown 单元格始终换行）。"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"输入时自动补全"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"输入代码时实时弹出补全建议，无需手动按 Tab。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(4){
+    >h2.pf-sec-t{font-size:0;&::before{content:"输出"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"输出超过以下行数启用滚动"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"超出该行数的输出在单元格内滚动显示（按 O 可单独切换）。"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"图表渲染格式"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"matplotlib 图表的输出格式（PNG、高清 Retina PNG 或矢量 SVG），对新启动内核生效。"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"交互式 HTML 输出"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在内置网页视图中运行含脚本的输出（Plotly、Bokeh 等）；关闭则仅静态显示。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(5){
+    >h2.pf-sec-t{font-size:0;&::before{content:"保存"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"自动保存间隔"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"有改动的笔记本按此周期自动保存；手动保存同时写入检查点。"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"记录单元格执行耗时"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在单元格元数据中记录开始与完成时间戳（兼容 JupyterLab 格式）。"}}
+        }
+      }
+    }
+  }
+}
+
+/* ── 设置页面：Carly 助手 (carly) ── */
+.pf-nav:has(.pf-group:nth-of-type(1) .nav-row:nth-of-type(8).on) + .pf-scroll > .pf-doc {
+  >header{
+    >h1.pf-title{font-size:0;&::before{content:"Carly 助手"}}
+  }
+  >section.pf-sec:nth-of-type(1){
+    >h2.pf-sec-t{font-size:0;&::before{content:"智能体"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"模型"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"Carly 使用的 omp 模型或角色（如 @smol、@default），复用你的 omp 登录凭据。"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"记忆文件"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"Carly 在每次对话前读取并持续更新的 Markdown 记忆文件（SOUL.md、USER.md、MEMORY.md、每日笔记及 HEARTBEAT.md）。"}}
+        }
+        >.pf-ctl{
+          >button:nth-of-type(1){font-size:0;&::after{content:"打开记忆目录"}}
+          >button:nth-of-type(2){font-size:0;&::after{content:"新建对话"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(2){
+    >h2.pf-sec-t{font-size:0;&::before{content:"语音"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"语音"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"实时语音对话使用的音色名称；留空则沿用 omp 默认音色（需登录支持语音的模型服务）。"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"打开时自动启用语音"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"唤起 Carly 时自动开启麦克风；也可随时点击麦克风图标或在空输入框按回车切换。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(3){
+    >h2.pf-sec-t{font-size:0;&::before{content:"定时任务"}}
+    >.pf-rows{
+      >ul{
+        >li{
+          >div:nth-of-type(1){
+            >button{font-size:0;&::after{content:"定时巡检（Heartbeat）"}}
+            >span{font-size:0;&::before{content:"· 内置"}}
+          }
+          >div:nth-of-type(4){
+            >button:nth-of-type(1){font-size:0;&::after{content:"立即运行"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"暂停"}}
+          }
+          >div:nth-of-type(5){
+            >div{
+              >.pf-lbl{
+                >div:nth-of-type(1){font-size:0;&::before{content:"巡检周期"}}
+                >div:nth-of-type(2){font-size:0;&::before{content:"Carly 按此周期检查 HEARTBEAT.md 清单，仅在需要你处理时提醒；清单为空时不运行。"}}
+              }
+            }
+          }
+        }
+      }
+      >div{
+        >div{font-size:0;&::before{content:"可以让 Carly 帮你安排定时提醒或监控状态变化。"}}
+      }
+    }
+  }
+}
+
+/* ── 设置页面：快捷键 (keyboard) ── */
+.pf-nav:has(.pf-group:nth-of-type(1) .nav-row:nth-of-type(9).on) + .pf-scroll > .pf-doc {
+  >header{
+    >h1.pf-title{font-size:0;&::before{content:"快捷键"}}
+  }
+  >section.pf-sec:nth-of-type(1){
+    >h2.pf-sec-t{font-size:0;&::before{content:"全局快捷键"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"显示/隐藏 Tern 窗口"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在任意应用中快速唤起或隐藏 Tern（global_hotkey）。"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"快速终端"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在任意应用中在鼠标所在屏幕唤出或隐藏快速终端（quick_hotkey）。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(2){
+    >h2.pf-sec-t{font-size:0;&::before{content:"快速终端"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"展示样式"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"下拉式从屏幕顶部展开卡片；居中唤起式类似 Spotlight 单行浮窗并随输出扩展。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"下拉式"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"居中唤起式"}}
+          }
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"失去焦点时自动隐藏"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"点击其他窗口时自动隐藏快速终端；关闭则需再次按快捷键隐藏（quick_autohide）。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(3){
+    >h2.pf-sec-t{font-size:0;&::before{content:"输入法"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"在终端中启用输入法"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在终端与程序输入框中启用中文、日文、韩文等系统输入法（IME）。"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"在编辑器中启用输入法"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在文件块的代码、文本和 Markdown 编辑器中启用中文等输入法（editor_ime）。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(4){
+    >h2.pf-sec-t{font-size:0;&::before{content:"快捷键预设"}}
+    >.pf-rows{
+      >div{
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"键位预设方案"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在 Tern 默认快捷键之上套用其他终端的习惯键位（keymap）。"}}
+        }
+      }
+      >p{font-size:0;&::before{content:"悬停下方命令：点 + 录制快捷键，点按键上的 × 移除；支持连续组合键及双击修饰键（如双击 Ctrl）。"}}
+    }
+  }
+  >section.pf-sec:nth-of-type(5){
+    >h2.pf-sec-t{font-size:0;&::before{content:"标签页与会话"}}
+  }
+  >section.pf-sec:nth-of-type(6){
+    >h2.pf-sec-t{font-size:0;&::before{content:"块与分屏"}}
+  }
+  >section.pf-sec:nth-of-type(7){
+    >h2.pf-sec-t{font-size:0;&::before{content:"滚动缓冲区、查找与剪贴板"}}
+  }
+  >section.pf-sec:nth-of-type(8){
+    >h2.pf-sec-t{font-size:0;&::before{content:"窗口"}}
+  }
+  >section.pf-sec:nth-of-type(9){
+    >h2.pf-sec-t{font-size:0;&::before{content:"编辑器"}}
+  }
+  >section.pf-sec:nth-of-type(10){
+    >h2.pf-sec-t{font-size:0;&::before{content:"数据库"}}
+  }
+}
+
+/* ── 设置页面：Git (git) ── */
+.pf-nav:has(.pf-group:nth-of-type(1) .nav-row:nth-of-type(10).on) + .pf-scroll > .pf-doc {
+  >header{
+    >h1.pf-title{font-size:0;&::before{content:"Git"}}
+  }
+  >section.pf-sec:nth-of-type(1){
+    >h2.pf-sec-t{font-size:0;&::before{content:"拉取（Fetch）"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"自动拉取间隔"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"按此间隔在后台自动拉取已打开 Git 块的所有远程仓库更新。"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"拉取时清理失效远程分支"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"自动清理远程仓库中已删除的追踪分支（--prune）。"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"拉取（Pull）按钮策略"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"设置 Git 工具栏中 Pull 按钮整合上游更新的方式。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"仅拉取"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"快进合并"}}
+            >button:nth-of-type(3){font-size:0;&::after{content:"仅快进"}}
+            >button:nth-of-type(4){font-size:0;&::after{content:"变基（Rebase）"}}
+          }
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(2){
+    >h2.pf-sec-t{font-size:0;&::before{content:"提交历史"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"初始加载提交数"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"打开仓库时首次读取的提交历史条数。"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"滚动时自动加载更多历史"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"滚动至提交图底部时自动继续加载更早记录。"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"默认分支名"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"新建 Git 仓库时的初始分支名称。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(3){
+    >h2.pf-sec-t{font-size:0;&::before{content:"提交图列"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"作者列"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在提交图中显示每次提交的作者头像与姓名。"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"日期列"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在提交图中显示提交时间。"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"提交哈希（SHA）列"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在提交图中显示简短提交 ID。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(4){
+    >h2.pf-sec-t{font-size:0;&::before{content:"差异对比（Diff）"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"左右分栏对比"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"以左右两栏显示旧版与新版差异（关闭为统一视图）。"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"默认显示完整文件"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"打开差异时展示完整文件内容，而非仅显示变动片段。"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"树形文件列表"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"以目录树展示变更文件；关闭则按平铺路径列出。"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"文本解码编码"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"所有仓库在差异与文件视图中解码文本文件使用的字符编码。"}}
+        }
+      }
+      >div:nth-of-type(5){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"面板尺寸"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"重置提交图列宽与右侧检查器面板宽度。"}}
+        }
+        >.pf-ctl{
+          >button{font-size:0;&::after{content:"重置尺寸"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(5){
+    >h2.pf-sec-t{font-size:0;&::before{content:"提交身份"}}
+    >.pf-rows{
+      >div{
+        >button{
+          >span:nth-of-type(3){
+            >span:nth-of-type(1){font-size:0;&::before{content:"使用系统 Git 配置"}}
+            >span:nth-of-type(2){font-size:0;&::before{content:"读取 git config 中的 user.name 与 user.email"}}
+          }
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(6){
+    >h2.pf-sec-t{font-size:0;&::before{content:"添加身份配置"}}
+    >.pf-rows{
+      >div{
+        >div:nth-of-type(1){
+          >label:nth-of-type(1){
+            >span{font-size:0;&::before{content:"配置名称"}}
+          }
+          >label:nth-of-type(2){
+            >span{font-size:0;&::before{content:"作者姓名"}}
+          }
+          >label:nth-of-type(3){
+            >span{font-size:0;&::before{content:"邮箱地址"}}
+          }
+        }
+        >div:nth-of-type(2){
+          >button{font-size:0;&::after{content:"添加配置"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(7){
+    >h2.pf-sec-t{font-size:0;&::before{content:"SSH"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"使用系统 SSH Agent"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"通过系统 SSH 代理和 ~/.ssh/config 验证 SSH 远程仓库。"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"私钥路径"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"关闭 SSH Agent 时使用的私钥文件。"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"公钥路径"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"可添加到 Git 托管平台的公钥文件。"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"复制公钥"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"将公钥内容复制到剪贴板。"}}
+        }
+        >.pf-ctl{
+          >button{font-size:0;&::after{content:"复制"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(8){
+    >h2.pf-sec-t{font-size:0;&::before{content:"签名"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"GPG 程序路径"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"填写 gpg 命令或完整可执行文件路径。"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"签名密钥 ID"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"填写 GPG 密钥 ID；留空则使用 git 的 user.signingkey。"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"提交自动签名"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"每次提交自动附加 -S 进行签名。"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"标签自动签名"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"创建标签时自动附加 -s 进行签名。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(9){
+    >h2.pf-sec-t{font-size:0;&::before{content:"外部编辑器"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"外部编辑器命令"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"打开文件或仓库时调用的编辑器命令；留空使用系统默认程序。"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"测试外部编辑器"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"聚焦到本机 Git 仓库所在的终端或 Git 块后可点击测试。"}}
+        }
+        >.pf-ctl{
+          >button{font-size:0;&::after{content:"打开编辑器"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(10){
+    >h2.pf-sec-t{font-size:0;&::before{content:"Git 可执行文件"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"使用自定义 Git 程序"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"启用下方指定的 Git 路径，替代 PATH 中的默认 git。"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"Git 可执行文件"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"填写 Git 可执行文件路径或命令名。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(11){
+    >h2.pf-sec-t{font-size:0;&::before{content:"Git 通知"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"操作成功通知"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"检出分支、提交、推送等成功时提示。"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"操作失败通知"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"操作失败时连同 Git 错误信息一并提示。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(12){
+    >h2.pf-sec-t{font-size:0;&::before{content:"AI 助手"}}
+    >.pf-rows{
+      >div{
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"模型"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"复用 omp 凭据生成提交信息等；留空优先使用 @commit，其次 @smol。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(13){
+    >h2.pf-sec-t{font-size:0;&::before{content:"当前仓库"}}
+    >.pf-rows{
+      >div{
+        >span{font-size:0;&::before{content:"未检测到当前仓库：请先聚焦到一个 Git 块或位于仓库中的终端，以配置 Git-flow、LFS 和稀疏检出。"}}
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(14){
+    >h2.pf-sec-t{font-size:0;&::before{content:"Git-flow 工作流"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div{font-size:0;&::before{content:"主分支（生产）"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div{font-size:0;&::before{content:"开发分支"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div{font-size:0;&::before{content:"功能分支前缀"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div{font-size:0;&::before{content:"发布分支前缀"}}
+        }
+      }
+      >div:nth-of-type(5){
+        >.pf-lbl{
+          >div{font-size:0;&::before{content:"热修复分支前缀"}}
+        }
+      }
+    }
+  }
+}
+
+/* ── 设置页面：插件 (plugins) ── */
+.pf-nav:has(.pf-group:nth-of-type(1) .nav-row:nth-of-type(11).on) + .pf-scroll > .pf-doc {
+  >header{
+    >h1.pf-title{font-size:0;&::before{content:"插件"}}
+  }
+  >section.pf-sec{
+    >h2.pf-sec-t{font-size:0;&::before{content:"插件"}}
+  }
+  > section.pf-sec > .pf-rows {
+    > div.pf-row:first-of-type > .pf-lbl {
+      > div.t { font-size: 0; &::before { content: "加载插件"; } }
+      > div.h { font-size: 0; &::before { content: "插件目录中的插件可扩展面板块、命令视图、命令与样式；关闭后不加载任何插件。"; } }
+    }
+    > div.pf-row:nth-last-of-type(2) {
+      > .pf-lbl {
+        > div.t { font-size: 0; &::before { content: "插件目录"; } }
+        > div.h { font-size: 0; &::before { content: "重载将在当前窗口和会话守护进程中重新识别新增、删除或修改的插件。"; } }
+      }
+      button.btn:nth-of-type(1) { font-size: 0; &::after { content: "重载"; } }
+      button.btn:nth-of-type(2) { font-size: 0; &::after { content: "打开插件目录"; } }
+    }
+    > div.pf-row:last-of-type {
+      > .pf-lbl {
+        > div.t { font-size: 0; &::before { content: "安装插件…"; } }
+        > div.h { font-size: 0; &::before { content: "输入本地插件目录路径或 Git 仓库地址，插件将复制到插件目录中。"; } }
+      }
+      button.btn { font-size: 0; &::after { content: "安装"; } }
+    }
+  }
+}
+
+/* ── 设置页面：会话 (sessions) ── */
+.pf-nav:has(.pf-group:nth-of-type(2) .nav-row:nth-of-type(1).on) + .pf-scroll > .pf-doc {
+  >header{
+    >h1.pf-title{font-size:0;&::before{content:"会话"}}
+  }
+  >section.pf-sec:nth-of-type(1){
+    >h2.pf-sec-t{font-size:0;&::before{content:"守护进程"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >span{font-size:0;&::before{content:"运行中：关闭窗口后会话仍在后台保持运行"}}
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"开机登录时自动启动"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"登录系统时静默启动后台守护进程并恢复保留的会话，异常断电或崩溃后可无缝续接。"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"在系统托盘显示图标"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"守护进程运行时在系统托盘显示状态图标，可快速打开窗口或停止会话服务。"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"通信管道（Socket）"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"窗口与终端内命令行连接守护进程使用的地址。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(2){
+    >h2.pf-sec-t{font-size:0;&::before{content:"当前窗口"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"会话概览"}}
+        }
+        >.pf-ctl{
+          >button{font-size:0;&::after{content:"切换会话…"}}
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"点击其他会话的标签页时"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在侧边标签栏或调度中心点击其他会话标签时的行为。“保持当前”需双击才会切换会话。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"切换"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"保持当前"}}
+          }
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(3){
+    >h2.pf-sec-t{font-size:0;&::before{content:"启动时"}}
+    >.pf-rows{
+      >div{
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"启动时重连远程主机"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"自动在后台重连上次使用过的远程主机；关闭后可在“设置 › 主机”中按需手动连接。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(4){
+    >h2.pf-sec-t{font-size:0;&::before{content:"关闭行为"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"关闭前确认"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"关闭块、标签或会话前是否确认。“有程序运行时”仅在命令或智能体忙碌时询问；锁定会话拒绝关闭。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"从不"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"有程序运行时"}}
+            >button:nth-of-type(3){font-size:0;&::after{content:"始终"}}
+          }
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"自动关闭空会话"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"当会话的最后一个标签页关闭或移走后自动关闭该空会话（锁定或含暂存块的会话除外）。"}}
+        }
+      }
+    }
+  }
+}
+
+/* ── 设置页面：主机 (hosts) ── */
+.pf-nav:has(.pf-group:nth-of-type(2) .nav-row:nth-of-type(2).on) + .pf-scroll > .pf-doc {
+  >header{
+    >h1.pf-title{font-size:0;&::before{content:"主机"}}
+  }
+  >section.pf-sec:nth-of-type(1){
+    >h2.pf-sec-t{font-size:0;&::before{content:"共享"}}
+    >.pf-rows{
+      >div{
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"允许网页共享本机会话"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"允许通过 tern web serve 将本机会话共享给浏览器访问；不影响连接到其他远程主机。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(2){
+    >h2.pf-sec-t{font-size:0;&::before{content:"已连接主机"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >div{
+          >div{
+            >div:nth-of-type(1){
+              >span:nth-of-type(2){font-size:0;&::before{content:"本机"}}
+            }
+          }
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"添加远程主机"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在目标主机运行 tern remote install --allow <用户> 后，可通过主机名、IP[:端口] 或 Tailnet 名称添加连接。"}}
+        }
+        >.pf-ctl{
+          >button{font-size:0;&::after{content:"添加远程主机…"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(3){
+    >h2.pf-sec-t{font-size:0;&::before{content:"连接提醒"}}
+    >.pf-rows{
+      >div{
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"连接状态通知"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"远程主机无法连接或断开时发送通知提醒。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(4){
+    >h2.pf-sec-t{font-size:0;&::before{content:"主机密钥"}}
+    >.pf-rows{
+      >div{
+        >div{
+          >div{font-size:0;&::before{content:"尚未保存任何主机指纹。首次连接远程主机时会展示指纹，确认信任后将自动记住。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(5){
+    >h2.pf-sec-t{font-size:0;&::before{content:"云端环境"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"云服务提供商"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"选择“发送到云端”功能使用的运行环境。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(2){font-size:0;&::after{content:"自托管"}}
+          }
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"云主机规格"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"创建云端沙箱时申请的 CPU 与内存配置。"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"空闲自动休眠"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"云主机空闲超过该时长后自动暂停，再次打开时恢复。"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"同步模型登录凭据"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"让云端智能体使用你的模型账号（若服务商轮换令牌，可能导致本机需重新登录）。"}}
+        }
+      }
+      >div:nth-of-type(5){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"同步 GitHub 登录凭据"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"同步你的 gh 或 Git 凭据，便于在云端直接 clone、push 和使用 gh CLI。"}}
+        }
+      }
+      >div:nth-of-type(6){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"额外同步被忽略的文件"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"匹配以下通配符的 .gitignore 文件也会一并上传至云端。"}}
+        }
+      }
+      >div:nth-of-type(7){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"环境快照重建周期"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"自托管环境快照超过该天数后，在下次发送时自动重建。"}}
+        }
+      }
+    }
+  }
+}
+
+/* ── 设置页面：高级 (advanced) ── */
+.pf-nav:has(.pf-group:nth-of-type(2) .nav-row:nth-of-type(3).on) + .pf-scroll > .pf-doc {
+  >header{
+    >h1.pf-title{font-size:0;&::before{content:"高级"}}
+  }
+  >section.pf-sec:nth-of-type(1){
+    >h2.pf-sec-t{font-size:0;&::before{content:"图形渲染"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"图形渲染器"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"选择渲染 Tern 窗口的硬件后端，重启后生效。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"自动"}}
+            >button:nth-of-type(3){font-size:0;&::after{content:"集成显卡"}}
+          }
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"当前渲染设备"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"当前窗口实际使用的显卡与图形 API。"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"抗锯齿"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"平滑图形、边框与线条边缘（文字保持独立平滑渲染）。"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"多重采样抗锯齿（MSAA）"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"提高边缘采样倍率以获得更细腻的曲线和细线，会增加 GPU 开销。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"关闭"}}
+          }
+        }
+      }
+      >div:nth-of-type(5){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"帧率上限"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"限制 Tern 的最高渲染帧率，在高刷屏上调低可减少功耗。"}}
+        }
+        >.pf-ctl{
+          >.pf-seg{
+            >button:nth-of-type(1){font-size:0;&::after{content:"跟随显示器"}}
+          }
+        }
+      }
+      >div:nth-of-type(6){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"垂直同步（VSync）"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"等待显示器刷新周期同步输出画面；关闭可略微降低延迟但可能出现画面撕裂。"}}
+        }
+      }
+      >div:nth-of-type(7){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"预渲染帧队列数"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"允许 GPU 提前准备的帧数：越小输入响应越快，越大复杂动画越流畅。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(2){
+    >h2.pf-sec-t{font-size:0;&::before{content:"配置文件"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(2){font-size:0;&::before{content:"以 JSON 保存你修改过的设置项；手动编辑后点击“重载”即可生效。"}}
+        }
+        >.pf-ctl{
+          >div{
+            >button:nth-of-type(1){font-size:0;&::after{content:"打开 settings.json"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"重载"}}
+          }
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"配置目录"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"存放 settings.json、known_hosts 与主机列表。"}}
+        }
+      }
+    }
+  }
+  >section.pf-sec:nth-of-type(3){
+    >h2.pf-sec-t{font-size:0;&::before{content:"诊断与数据目录"}}
+    >.pf-rows{
+      >div:nth-of-type(1){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"日志与应用状态"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"包含各进程日志、当前状态快照以及跨会话持久化的应用状态。"}}
+        }
+        >.pf-ctl{
+          >div{
+            >button:nth-of-type(1){font-size:0;&::after{content:"打开日志目录"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"打开应用数据目录"}}
+          }
+        }
+      }
+      >div:nth-of-type(2){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"日志目录"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"可通过 STENCIL_LOG 调整日志级别，STENCIL_TRACE 录制性能追踪。"}}
+        }
+      }
+      >div:nth-of-type(3){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"发送崩溃报告"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"崩溃时将错误、近期日志及系统/GPU 信息发送给 Stencil（本地日志目录也会保留副本）。"}}
+        }
+      }
+      >div:nth-of-type(4){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"自定义主题目录"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"放入此目录的 CSS 主题文件（NAME.css）会加入主题列表并实时热更新；目录不存在时可手动创建。"}}
+        }
+      }
+      >div:nth-of-type(5){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"自定义语法高亮目录"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"放入 Sublime 语法定义文件（NAME.sublime-syntax）可扩展或覆盖语言高亮，重启后生效。"}}
+        }
+      }
+      >div:nth-of-type(6){
+        >.pf-lbl{
+          >div:nth-of-type(1){font-size:0;&::before{content:"omp 配置目录"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"Tern 读取 omp 主题配置（config.yml）与自定义主题的目录；留空使用 omp 默认目录。"}}
+        }
+      }
+    }
+  }
+}
