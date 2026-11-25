@@ -4,6 +4,18 @@
 
 基于 [maicent/tern-zh-cn](https://github.com/maicent/tern-zh-cn)（MIT License）深度扩展，通过官方插件机制实现设置界面、弹窗菜单与命令面板的全量简体中文化。
 
+## 效果预览
+
+### 设置中心（全部 14 个页面完整汉化）
+
+![设置中心 - 通用](docs/settings-general.png)
+
+![设置中心 - 插件](docs/settings-plugins.png)
+
+### 中文命令面板（160+ 条内置命令）
+
+![中文命令面板](docs/command-palette.png)
+
 ## 功能特性
 
 - **设置中心全量汉化（全部 14 个页面）**：
