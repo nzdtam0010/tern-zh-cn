@@ -1,5 +1,5 @@
 /* ============================================================================
- * Tern 简体中文全面汉化插件样式 (zh-cn v0.5.0)
+ * Tern 简体中文全面汉化插件样式 (zh-cn v0.5.1)
  * 适配版本：Tern 0.9.34
  *
  * 原理说明：
@@ -344,6 +344,47 @@ div.tooltip > span.tt-lbl::before { font-size: 12px; white-space: nowrap; }
   &:has([title^="Rewind the conversation"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "回溯对话到此处"; } }
   &:has([title="Auto-compact at 85%"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "上下文达 85% 时自动压缩"; } }
   &:has([title="Recap while you were away"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "离开期间的对话摘要"; } }
+}
+
+/* ── 5h. omp 上下文用量明细弹窗（Context breakdown modal） ── */
+div.sf-overlay.modal:has(.sf-ov-body .sf-meter .sf-mt-part) {
+  .sf-ov-head > .sf-ov-title > span.sf-t-strong:first-of-type {
+    font-size: 0;
+    &::before { content: "上下文用量"; font-size: 14px; font-weight: 600; margin-right: 4px; }
+  }
+  .sf-list-slot:has(> .sf-item:nth-of-type(12)) {
+    > .sf-item > .sf-item-label {
+      &:not(:has(> span:nth-of-type(2))) {
+        font-size: 0;
+        > span:first-of-type { font-size: 13px; margin-right: 6px; }
+        &::after { font-size: 13px; white-space: nowrap; }
+      }
+      > span:nth-of-type(2) {
+        font-size: 0;
+        &::before { font-size: 13px; white-space: nowrap; }
+      }
+    }
+    > .sf-item:nth-of-type(1) > .sf-item-label { &:not(:has(> span:nth-of-type(2)))::after, > span:nth-of-type(2)::before { content: "系统提示词"; } }
+    > .sf-item:nth-of-type(2) > .sf-item-label { &:not(:has(> span:nth-of-type(2)))::after, > span:nth-of-type(2)::before { content: "指令文件"; } }
+    > .sf-item:nth-of-type(3) > .sf-item-label { &:not(:has(> span:nth-of-type(2)))::after, > span:nth-of-type(2)::before { content: "技能（Skills）"; } }
+    > .sf-item:nth-of-type(4) > .sf-item-label { &:not(:has(> span:nth-of-type(2)))::after, > span:nth-of-type(2)::before { content: "内置工具"; } }
+    > .sf-item:nth-of-type(5) > .sf-item-label { &:not(:has(> span:nth-of-type(2)))::after, > span:nth-of-type(2)::before { content: "自定义工具"; } }
+    > .sf-item:nth-of-type(6) > .sf-item-label { &:not(:has(> span:nth-of-type(2)))::after, > span:nth-of-type(2)::before { content: "用户 / 开发者消息"; } }
+    > .sf-item:nth-of-type(7) > .sf-item-label { &:not(:has(> span:nth-of-type(2)))::after, > span:nth-of-type(2)::before { content: "助手回复消息"; } }
+    > .sf-item:nth-of-type(8) > .sf-item-label { &:not(:has(> span:nth-of-type(2)))::after, > span:nth-of-type(2)::before { content: "助手思考过程"; } }
+    > .sf-item:nth-of-type(9) > .sf-item-label { &:not(:has(> span:nth-of-type(2)))::after, > span:nth-of-type(2)::before { content: "工具调用"; } }
+    > .sf-item:nth-of-type(10) > .sf-item-label { &:not(:has(> span:nth-of-type(2)))::after, > span:nth-of-type(2)::before { content: "工具输出"; } }
+    > .sf-item:nth-of-type(11) > .sf-item-label { &:not(:has(> span:nth-of-type(2)))::after, > span:nth-of-type(2)::before { content: "自动压缩预留空间"; } }
+    > .sf-item:nth-of-type(12) > .sf-item-label { &:not(:has(> span:nth-of-type(2)))::after, > span:nth-of-type(2)::before { content: "剩余可用空间"; } }
+  }
+  .sf-ov-body > .sf-col > .sf-col > .sf-text > span.sf-t-dim {
+    font-size: 0;
+    &::before { content: "各项总计按估算占比拆分已用上下文，内部明细之和可能略有差异。"; font-size: 12px; line-height: 1.45; }
+  }
+}
+div.sf-overlay.modal button.sf-button[title="Close"] > span.sf-btn-label {
+  font-size: 0;
+  &::before { content: "关闭"; font-size: 12.5px; white-space: nowrap; }
 }
 
 /* ── 6. 设置窗口（Settings）左侧导航与通用元素 ── */
