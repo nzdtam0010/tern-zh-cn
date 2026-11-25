@@ -1,5 +1,5 @@
 /* ============================================================================
- * Tern 简体中文全面汉化插件样式 (zh-cn v0.2.0)
+ * Tern 简体中文全面汉化插件样式 (zh-cn v0.4.0)
  * 适配版本：Tern 0.9.34
  *
  * 原理说明：
@@ -119,7 +119,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
     .wg-tile:nth-of-type(1) { .wg-tn::before { content: "工作目录"; } .wg-ta::before { content: "当前聚焦面板的所在目录"; } }
     .wg-tile:nth-of-type(2) { .wg-tn::before { content: "Git 分支"; } .wg-ta::before { content: "当前分支与变更状态"; } }
     .wg-tile:nth-of-type(3) { .wg-tn::before { content: "上一条命令"; } .wg-ta::before { content: "正在运行的命令或上条退出状态"; } }
-    .wg-tile:nth-of-type(4) { .wg-tn::before { content: "滚动缓冲区"; } .wg-ta::before { content: "当前面板的滚动历史行数"; } }
+    .wg-tile:nth-of-type(4) { .wg-tn::before { content: "历史输出"; } .wg-ta::before { content: "当前面板的历史输出行数"; } }
     .wg-tile:nth-of-type(5) { .wg-tn::before { content: "网格尺寸"; } .wg-ta::before { content: "终端列数 × 行数"; } }
     .wg-tile:nth-of-type(6) { .wg-tn::before { content: "插件状态段"; } .wg-ta::before { content: "由插件为当前面板提供的状态信息"; } }
   }
@@ -152,6 +152,83 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
   .tn-sd-fam:nth-of-type(3) > span { font-size: 0; &::before { content: "云与容器"; font-size: 11.5px; font-weight: 500; } }
   .tn-sd-fam:nth-of-type(4) > span { font-size: 0; &::before { content: "系统监控"; font-size: 11.5px; font-weight: 500; } }
   .tn-sd-fam:nth-of-type(5) > span { font-size: 0; &::before { content: "运行环境"; font-size: 11.5px; font-weight: 500; } }
+}
+
+/* ── 5f. 右键菜单（面板右键菜单 + 标签页右键菜单） ──
+ * 利用 flex order 保持 [图标 order:0] [中文菜单文案 ::after order:1] [快捷键/附加区 .sub order:2] 原生顺序。
+ */
+div.pop.ctx:not(:has(> div.mi-row)):has(> div.sep:nth-of-type(3)) {
+  > button.mi {
+    font-size: 0;
+    > svg.ico { order: 0; }
+    &::after { order: 1; font-size: 13px; font-weight: 450; white-space: nowrap; }
+    > span.sub { order: 2; font-size: 12px; }
+  }
+  /* 第一组（剪贴板与会话链接）：根据第 2 项是否有 4 个按键区分是否存在“复制”项 */
+  &:has(> button.mi:nth-of-type(2) .kbd:nth-of-type(4)) {
+    > button.mi:nth-of-type(1)::after { content: "粘贴"; }
+    > button.mi:nth-of-type(2)::after { content: "全选"; }
+    > button.mi:nth-of-type(3):has(+ div.sep)::after { content: "复制会话链接"; }
+  }
+  &:not(:has(> button.mi:nth-of-type(2) .kbd:nth-of-type(4))) {
+    > button.mi:nth-of-type(1)::after { content: "复制"; }
+    > button.mi:nth-of-type(2)::after { content: "粘贴"; }
+    > button.mi:nth-of-type(3)::after { content: "全选"; }
+    > button.mi:nth-of-type(4):has(+ div.sep)::after { content: "复制会话链接"; }
+  }
+  /* 第二组（分屏、移动与暂存） */
+  > div.sep:nth-of-type(1) + button.mi::after { content: "向右分屏"; }
+  > div.sep:nth-of-type(1) + button.mi + button.mi::after { content: "向下分屏"; }
+  > div.sep:nth-of-type(1) + button.mi + button.mi + button.mi::after { content: "移至其他标签页…"; }
+  > div.sep:nth-of-type(1) + button.mi + button.mi + button.mi + button.mi::after { content: "移至其他窗口…"; }
+  > button.mi:has(+ div.sep:nth-of-type(2))::after { content: "暂存当前面板"; }
+  /* 第三组（历史输出、录制与重启） */
+  > div.sep:nth-of-type(2) + button.mi::after { content: "查找历史输出"; }
+  > div.sep:nth-of-type(2) + button.mi + button.mi::after { content: "在编辑器中打开历史输出"; }
+  > div.sep:nth-of-type(2) + button.mi + button.mi + button.mi::after { content: "清屏并清除历史"; }
+  > div.sep:nth-of-type(2) + button.mi + button.mi + button.mi + button.mi::after { content: "录制面板"; }
+  > div.sep:nth-of-type(2) + button.mi + button.mi + button.mi + button.mi + button.mi::after { content: "重启终端"; }
+  /* 第四组（关闭） */
+  > div.sep:nth-of-type(3) + button.mi::after { content: "关闭面板"; }
+}
+
+div.pop.ctx:has(> div.mi-row) {
+  > button.mi {
+    font-size: 0;
+    > svg.ico { order: 0; }
+    &::after { order: 1; font-size: 13px; font-weight: 450; white-space: nowrap; }
+    > span.sub { order: 2; font-size: 12px; }
+  }
+  > button.mi:nth-of-type(1)::after { content: "重命名标签页…"; }
+  > button.mi:nth-of-type(2)::after { content: "自动整理标签标题"; }
+  > button.mi:nth-of-type(3):has(+ div.mi-row)::after { content: "复制会话链接"; }
+  > div.mi-row:first-of-type {
+    font-size: 0;
+    > svg.ico { order: 0; }
+    &::after { order: 1; content: "标签颜色"; font-size: 13px; white-space: nowrap; }
+    > span.sub { order: 2; font-size: 12px; }
+  }
+  > div.mi-row:first-of-type + div.sep + div.mi-row {
+    font-size: 0;
+    > svg.ico { order: 0; }
+    &::after { order: 1; content: "vCPU 上限"; font-size: 13px; white-space: nowrap; }
+    > span.sub { order: 2; font-size: 12px; }
+  }
+  > div.mi-row:first-of-type + div.sep + div.mi-row + div.mi-row {
+    font-size: 0;
+    > svg.ico { order: 0; }
+    &::after { order: 1; content: "内存上限"; font-size: 13px; white-space: nowrap; }
+    > span.sub { order: 2; font-size: 12px; }
+  }
+  .sld.min > .sld-v {
+    font-size: 0;
+    &::before { content: "不限"; font-size: 12px; white-space: nowrap; }
+  }
+  > div.mi-row.bare + div.sep + button.mi::after { content: "新建标签页"; }
+  > div.mi-row.bare + div.sep + button.mi + button.mi::after { content: "移至其他窗口…"; }
+  > div.sep:last-of-type + button.mi::after { content: "锁定会话"; }
+  > div.sep:last-of-type + button.mi + button.mi::after { content: "关闭标签页"; }
+  > div.sep:last-of-type + button.mi + button.mi + button.mi::after { content: "恢复已关闭的标签页"; }
 }
 
 /* ── 6. 设置窗口（Settings）左侧导航与通用元素 ── */
@@ -234,7 +311,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       >div{
         >.pf-lbl{
           >div:nth-of-type(1){font-size:0;&::before{content:"默认 Shell"}}
-          >div:nth-of-type(2){font-size:0;&::before{content:"本机新建终端块运行的登录 Shell，留空则使用默认登录 Shell（powershell.exe）。"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"本机新建终端面板运行的登录 Shell，留空则使用默认登录 Shell（powershell.exe）。"}}
         }
       }
     }
@@ -245,7 +322,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       >div:nth-of-type(1){
         >.pf-lbl{
           >div:nth-of-type(1){font-size:0;&::before{content:"新建标签页与分屏默认打开"}}
-          >div:nth-of-type(2){font-size:0;&::before{content:"按下 Ctrl+Shift+T / Enter / O 时打开的内容；选择“每次询问”将列出块类型供挑选。Ctrl+Shift+` 始终新建终端块，Ctrl+Shift+A 新建智能体块。"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"按下 Ctrl+Shift+T / Enter / O 时打开的内容；选择“每次询问”将列出面板类型供挑选。Ctrl+Shift+` 始终新建终端，Ctrl+Shift+A 新建智能体。"}}
         }
         >.pf-ctl{
           >.pf-seg{
@@ -257,8 +334,8 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       }
       >div:nth-of-type(2){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"新标签页起始路径"}}
-          >div:nth-of-type(2){font-size:0;&::before{content:"分屏始终沿用被拆分块的当前目录。"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"新标签页起始目录"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"分屏始终沿用被拆分面板的当前目录。"}}
         }
         >.pf-ctl{
           >.pf-seg{
@@ -270,19 +347,19 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       >div:nth-of-type(3){
         >.pf-lbl{
           >div:nth-of-type(1){font-size:0;&::before{content:"起始目录"}}
-          >div:nth-of-type(2){font-size:0;&::before{content:"本机新窗口、新会话以及无继承目录的新标签页的起始路径；留空或目录不存在时从用户主目录启动。"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"本机新窗口、新会话以及无继承目录的新标签页的起始目录；留空或目录不存在时从用户主目录启动。"}}
         }
       }
       >div:nth-of-type(4){
         >.pf-lbl{
           >div:nth-of-type(1){font-size:0;&::before{content:"跨边缘移动焦点时切换标签页"}}
-          >div:nth-of-type(2){font-size:0;&::before{content:"在窗口边缘块继续向外移动焦点时自动切换到上/下一个标签页（顶部标签用 ←/→，侧边标签用 ↑/↓）。"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在窗口边缘面板继续向外移动焦点时自动切换到上/下一个标签页（顶部标签用 ←/→，侧边标签用 ↑/↓）。"}}
         }
       }
       >div:nth-of-type(5){
         >.pf-lbl{
           >div:nth-of-type(1){font-size:0;&::before{content:"向左移动焦点可进入文件面板"}}
-          >div:nth-of-type(2){font-size:0;&::before{content:"当文件面板可见时，从最左侧块继续向左移动焦点会聚焦到文件面板。"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"当文件面板可见时，从最左侧面板继续向左移动焦点会聚焦到文件面板。"}}
         }
       }
     }
@@ -292,7 +369,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
     >.pf-rows{
       >div{
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"选中即复制"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"选中自动复制"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"鼠标拖动完成文本选择后自动复制到剪贴板。"}}
         }
       }
@@ -374,7 +451,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       >div{
         >.pf-lbl{
           >div:nth-of-type(1){font-size:0;&::before{content:"自动保存"}}
-          >div:nth-of-type(2){font-size:0;&::before{content:"无需按 Ctrl+S 即可自动保存文件块；无论是否开启，退出时均会保留未保存内容，且不会覆盖外部修改过的文件。"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"无需按 Ctrl+S 即可自动保存文件面板；无论是否开启，退出时均会保留未保存内容，且不会覆盖外部修改过的文件。"}}
         }
         >.pf-ctl{
           >.pf-seg{
@@ -420,12 +497,12 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
     >.pf-rows{
       >div:nth-of-type(2){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"由 Tern 托管"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"交由 Tern 自动托管"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"Tern 自动从官方源安装并更新 omp，优先加入终端 PATH 并供 Shell 调用。"}}
         }
         >.pf-ctl{
           >button:nth-of-type(1){font-size:0;&::after{content:"检查更新"}}
-          >button:nth-of-type(2){font-size:0;&::after{content:"停止托管"}}
+          >button:nth-of-type(2){font-size:0;&::after{content:"取消托管"}}
         }
       }
     }
@@ -434,7 +511,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
     >.pf-rows{
       >div:nth-of-type(2){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"由 Tern 托管"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"交由 Tern 自动托管"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"Tern 自动从官方源安装并更新 ovnfs，并优先加入终端 PATH 供 Shell 使用。"}}
         }
         >.pf-ctl{
@@ -447,7 +524,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
     >.pf-rows{
       >div:nth-of-type(2){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"由 Tern 托管"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"交由 Tern 自动托管"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"Tern 自动从官方源安装并更新 ABKit（omp 浏览器与 Tern 网页视图内核）。"}}
         }
         >.pf-ctl{
@@ -469,18 +546,18 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       >div:nth-of-type(1){
         >.pf-lbl{
           >div:nth-of-type(1){font-size:0;&::before{content:"智能体"}}
-          >div:nth-of-type(2){font-size:0;&::before{content:"新建智能体块（Ctrl+Shift+A）默认启动的程序。"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"新建智能体面板（Ctrl+Shift+A）默认启动的程序。"}}
         }
       }
       >div:nth-of-type(2){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"智能体块打开方式"}}
-          >div:nth-of-type(2){font-size:0;&::before{content:"新建智能体块的放置位置。“替换当前”在标签页仅有单个空闲终端时直接替换，否则自动分屏。"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"智能体打开方式"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"新建智能体面板的放置位置。“替换当前面板”在标签页仅有单个空闲终端时直接替换，否则自动分屏。"}}
         }
         >.pf-ctl{
           >.pf-seg{
-            >button:nth-of-type(1){font-size:0;&::after{content:"分屏"}}
-            >button:nth-of-type(2){font-size:0;&::after{content:"替换当前"}}
+            >button:nth-of-type(1){font-size:0;&::after{content:"分屏打开"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"替换当前面板"}}
             >button:nth-of-type(3){font-size:0;&::after{content:"新标签页"}}
           }
         }
@@ -492,14 +569,14 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
     >.pf-rows{
       >div:nth-of-type(1){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"需要处理提醒"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"待处理提醒"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"当 Tern 处于后台且智能体等待你的确认或提问时发送系统通知，点击即可跳回该面板。"}}
         }
       }
       >div:nth-of-type(2){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"回合完成提醒"}}
-          >div:nth-of-type(2){font-size:0;&::before{content:"当 Tern 处于后台且智能体完成或失败一轮对话时发送系统通知。"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"对话回复完成"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"当 Tern 处于后台且智能体完成或中断一轮回复时发送系统通知。"}}
         }
       }
     }
@@ -695,13 +772,13 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       >div:nth-of-type(7){
         >.pf-lbl{
           >div:nth-of-type(1){font-size:0;&::before{content:"代码字体"}}
-          >div:nth-of-type(2){font-size:0;&::before{content:"编辑器、块和标签等处的等宽字体；留空时编辑器跟随终端字体，其余使用内置字体。"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"编辑器、面板与标签等处的等宽字体；留空时编辑器跟随终端字体，其余使用内置字体。"}}
         }
       }
       >div:nth-of-type(8){
         >.pf-lbl{
           >div:nth-of-type(1){font-size:0;&::before{content:"界面字体"}}
-          >div:nth-of-type(2){font-size:0;&::before{content:"界面文字字体及字号（应用于标签栏、菜单、块与设置面板）；留空使用内置 Geist。"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"界面文字字体及字号（应用于标签栏、菜单、面板与设置中心）；留空使用内置 Geist。"}}
         }
       }
       >div:nth-of-type(9){
@@ -724,14 +801,14 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       }
       >div:nth-of-type(12){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"文字像素对齐"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"文字像素级对齐"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"将每个字符对齐到整数像素，边缘更锐利；关闭则使用亚像素平滑定位。"}}
         }
       }
       >div:nth-of-type(13){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"对比度校正"}}
-          >div:nth-of-type(2){font-size:0;&::before{content:"自动提亮在背景上过暗的程序文本，达到 WCAG AA 可读性标准。"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"自动对比度增强"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"自动提亮在背景上偏暗的终端文字，使其达到 WCAG AA 可读性标准。"}}
         }
         >.pf-ctl{
           >.pf-seg{
@@ -794,7 +871,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       }
       >div:nth-of-type(5){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"平滑移动（Glide）"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"光标平滑滑行"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"光标移动时的滑动过渡时长；关闭则直接跳转。"}}
         }
         >.pf-ctl{
@@ -849,7 +926,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       >div:nth-of-type(10){
         >.pf-lbl{
           >div:nth-of-type(1){font-size:0;&::before{content:"在编辑器中启用输入法"}}
-          >div:nth-of-type(2){font-size:0;&::before{content:"编辑代码、纯文本与 Markdown 的文件块同样使用该光标样式。"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"编辑代码、纯文本与 Markdown 的文件面板同样使用该光标样式。"}}
         }
       }
       >div:nth-of-type(11){
@@ -975,7 +1052,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
         >.pf-ctl{
           >.pf-seg{
             >button:nth-of-type(1){font-size:0;&::after{content:"从不"}}
-            >button:nth-of-type(2){font-size:0;&::after{content:"分屏时"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"仅分屏时"}}
             >button:nth-of-type(3){font-size:0;&::after{content:"始终"}}
           }
         }
@@ -992,7 +1069,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
           >div:nth-of-type(2){font-size:0;&::before{content:"窗口底部状态栏小组件：目录与分支、上一条命令、系统监控、omp 用量及插件组件。"}}
         }
         >.pf-ctl{
-          >button{font-size:0;&::after{content:"编辑小组件…"}}
+          >button{font-size:0;&::after{content:"自定义小组件…"}}
         }
       }
       >div:nth-of-type(4){
@@ -1090,7 +1167,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       }
       >div:nth-of-type(9){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"输入框模式"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"对话输入框格式"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"设置 omp 输入框的编辑视图：Markdown 实时所见即所得，纯文本则原样显示标记符号。"}}
         }
         >.pf-ctl{
@@ -1102,12 +1179,12 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       >div:nth-of-type(10){
         >.pf-lbl{
           >div:nth-of-type(1){font-size:0;&::before{content:"Markdown 标题样式"}}
-          >div:nth-of-type(2){font-size:0;&::before{content:"标记式保留正文大小并显示淡色 # 号；分级字号按标题级别放大；自动模式随对话风格切换。"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"等大标记式保留正文大小并显示淡色 # 号；分级字号按标题级别放大；自动模式随对话风格切换。"}}
         }
         >.pf-ctl{
           >.pf-seg{
             >button:nth-of-type(1){font-size:0;&::after{content:"自动"}}
-            >button:nth-of-type(2){font-size:0;&::after{content:"标记式"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"等大标记式"}}
             >button:nth-of-type(3){font-size:0;&::after{content:"分级字号"}}
           }
         }
@@ -1120,13 +1197,13 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       }
       >div:nth-of-type(12){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"差异对比展示方式"}}
-          >div:nth-of-type(2){font-size:0;&::before{content:"控制原生视图中代码差异的显示方式；面板足够宽时“分屏”将左右并排对比。"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"代码改动对比方式"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"控制原生视图中代码改动的显示方式；面板足够宽时“左右分栏”将新旧内容并排展示。"}}
         }
         >.pf-ctl{
           >.pf-seg{
-            >button:nth-of-type(1){font-size:0;&::after{content:"内联"}}
-            >button:nth-of-type(2){font-size:0;&::after{content:"分屏"}}
+            >button:nth-of-type(1){font-size:0;&::after{content:"行内对比"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"左右分栏"}}
           }
         }
       }
@@ -1156,8 +1233,8 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       }
       >div:nth-of-type(2){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"弹性过滚回弹"}}
-          >div:nth-of-type(2){font-size:0;&::before{content:"滚到终端、文件、列表或画板边界时呈现弹性回弹效果；关闭则直接停在边界。"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"边界回弹效果"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"滚到终端、文件、列表或画布边界时呈现弹性回弹效果；关闭则直接停在边界。"}}
         }
       }
       >div:nth-of-type(3){
@@ -1181,7 +1258,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       }
       >div:nth-of-type(5){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"滚动缓冲区行数"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"历史输出保留行数"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"每个终端保留的历史输出行数（在内存中压缩存储）。"}}
         }
       }
@@ -1192,37 +1269,37 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
     >.pf-rows{
       >div:nth-of-type(1){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"原生程序视图（TSP）"}}
-          >div:nth-of-type(2){font-size:0;&::before{content:"支持 Tern Surface Protocol 的程序（如 omp）使用原生组件渲染；关闭则退回传统字符网格。"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"原生界面渲染（TSP）"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"支持 Tern Surface Protocol 的程序（如 omp）使用原生界面渲染；关闭则退回传统终端字符网格。"}}
         }
       }
       >div:nth-of-type(2){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"原生命令输出视图"}}
-          >div:nth-of-type(2){font-size:0;&::before{content:"将 git、ls、cargo、docker 等常见命令输出渲染为结构化视图，随时可一键切回原始输出。"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"命令输出富视图"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"将 git、ls、cargo、docker 等常见命令输出渲染为可交互富视图，随时可一键切回原始输出。"}}
         }
       }
       >div:nth-of-type(3){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"超过以下行数自动折叠输出"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"超长输出自动折叠阈值"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"命令结束后输出超过该行数时自动折叠中间部分；设为“从不”则完整保留。"}}
         }
       }
       >div:nth-of-type(4){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"原生补全弹窗"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"原生补全菜单"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"以原生浮层菜单展示 Shell 的 Tab 自动补全候选列表。"}}
         }
       }
       >div:nth-of-type(5){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"原生输入框编辑快捷键"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"输入框原生文本编辑"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"在 omp 输入框中支持 Shift+方向键选区、拖拽选区及 Ctrl+X/C/A/Z 等原生编辑操作。"}}
         }
       }
       >div:nth-of-type(6){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"对话输入自动更正"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"对话输入自动纠错"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"在 omp 与智能体输入框中启用拼写更正与词语联想；关闭则原样输入。"}}
         }
       }
@@ -1234,12 +1311,12 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       >div:nth-of-type(1){
         >.pf-lbl{
           >div:nth-of-type(1){font-size:0;&::before{content:"原生 Shell 提示符"}}
-          >div:nth-of-type(2){font-size:0;&::before{content:"由 Tern 原生绘制 zsh / bash / fish / nushell / PowerShell 提示符，缩放窗口不乱行（对新建块生效）。"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"由 Tern 原生绘制 zsh / bash / fish / nushell / PowerShell 提示符，缩放窗口不乱行（对新建面板生效）。"}}
         }
       }
       >div:nth-of-type(2){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"提示符预设"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"起始预设风格"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"选择下方各提示符样式的初始预设；除 p10k 配置仅限 zsh 外，其余预设支持所有主流 Shell。"}}
         }
         >.pf-ctl{
@@ -1337,7 +1414,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       }
       >div:nth-of-type(6){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"边框连线"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"边框引导线"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"连接提示符栏与下方输入行的引导线样式。"}}
         }
         >.pf-ctl{
@@ -1363,8 +1440,8 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       }
       >div:nth-of-type(7){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"右侧封口线"}}
-          >div:nth-of-type(2){font-size:0;&::before{content:"在提示符右端绘制封口折线（开启边框连线时生效）。"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"右侧连接线"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在提示符右端绘制封口折线（开启边框引导线时生效）。"}}
         }
         >.pf-ctl{
           >div{
@@ -1384,7 +1461,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       }
       >div:nth-of-type(8){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"左右间距填充"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"中段填充样式"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"提示符左右两侧模块之间的空白填充样式。"}}
         }
         >.pf-ctl{
@@ -1466,7 +1543,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
           >div{
             >button:nth-of-type(1){
               >span:nth-of-type(1){
-                >span:nth-of-type(1){font-size:0;&::before{content:"行/词/字节统计"}}
+                >span:nth-of-type(1){font-size:0;&::before{content:"行/词/字节计数"}}
                 >span:nth-of-type(2){font-size:0;&::before{content:"预设"}}
               }
             }
@@ -1606,7 +1683,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
               }
             }
             >div:nth-of-type(4){
-              >span{font-size:0;&::before{content:"使用 p10k 配置时沿用其自身模块；切换其他样式后以下模块配置生效。"}}
+              >span{font-size:0;&::before{content:"使用 p10k 配置时沿用其自身模块；切换为其他预设后，以下模块配置才会生效。"}}
             }
           }
         }
@@ -1625,7 +1702,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       >div:nth-of-type(1){
         >.pf-lbl{
           >div:nth-of-type(1){font-size:0;&::before{content:"允许程序写入剪贴板（OSC 52）"}}
-          >div:nth-of-type(2){font-size:0;&::before{content:"vim、tmux 及 SSH 远程程序通过 OSC 52 复制内容；设为“询问”会先展示待复制文本。程序永远无法读取剪贴板。"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"vim、tmux 及 SSH 远程程序通过 OSC 52 复制内容；设为“询问”会先展示待复制文本。程序始终无法读取剪贴板。"}}
         }
         >.pf-ctl{
           >.pf-seg{
@@ -1637,7 +1714,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       }
       >div:nth-of-type(2){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"程序内超链接（OSC 8）"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"终端超链接（OSC 8）"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"控制程序输出的 OSC 8 隐藏链接；设为“询问”在打开前显示真实网址，设为“从不”则忽略。"}}
         }
         >.pf-ctl{
@@ -1651,7 +1728,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       >div:nth-of-type(3){
         >.pf-lbl{
           >div:nth-of-type(1){font-size:0;&::before{content:"程序通知（OSC 9/99/777）"}}
-          >div:nth-of-type(2){font-size:0;&::before{content:"允许终端程序发送的通知显示为浮层与待处理事项，可在 settings.json 中过滤。"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"允许终端程序发出的通知（OSC 9 / 99 / 777）显示为浮层与待处理事项，可在 settings.json 中过滤。"}}
         }
       }
     }
@@ -1745,7 +1822,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       }
       >div:nth-of-type(7){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"已跟踪文件"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"已追踪文件"}}
         }
       }
     }
@@ -1770,7 +1847,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       }
       >div:nth-of-type(4){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"贮藏列表（Stash）"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"贮藏（Stash）"}}
         }
       }
       >div:nth-of-type(5){
@@ -1840,7 +1917,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       }
       >div:nth-of-type(5){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"行/词/字节统计"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"行/词/字节计数"}}
         }
       }
       >div:nth-of-type(6){
@@ -1865,7 +1942,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       }
       >div:nth-of-type(2){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"实时追踪日志"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"实时日志流"}}
         }
       }
       >div:nth-of-type(3){
@@ -1895,7 +1972,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
     >.pf-rows{
       >div{
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"文本搜索匹配"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"搜索匹配结果"}}
         }
       }
     }
@@ -1925,7 +2002,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       }
       >div:nth-of-type(5){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"构建任务运行器"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"构建任务工具"}}
         }
       }
       >div:nth-of-type(6){
@@ -1960,7 +2037,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       }
       >div:nth-of-type(5){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"包管理与脚本"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"包与脚本"}}
         }
       }
     }
@@ -2005,7 +2082,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       }
       >div:nth-of-type(2){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"磁盘挂载空间"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"磁盘空间"}}
         }
       }
       >div:nth-of-type(3){
@@ -2015,7 +2092,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       }
       >div:nth-of-type(4){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"网络端口与套接字"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"网络端口与连接"}}
         }
       }
       >div:nth-of-type(5){
@@ -2080,7 +2157,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       }
       >div:nth-of-type(2){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"容器构建与拉推"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"镜像构建与拉推"}}
         }
       }
       >div:nth-of-type(3){
@@ -2152,7 +2229,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
     >.pf-rows{
       >div:nth-of-type(1){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"默认位置"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"默认目录"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"新建或打开数据库时的默认起始目录。"}}
         }
       }
@@ -2173,14 +2250,14 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       }
       >div:nth-of-type(4){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"只读最近文件快捷键"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"只读快捷键打开最近数据库"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"启用 Ctrl+Alt+Shift+1~9 以相反的只读模式打开最近数据库。"}}
         }
       }
       >div:nth-of-type(5){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"恢复会话时自动重新打开数据库"}}
-          >div:nth-of-type(2){font-size:0;&::before{content:"恢复数据库块时立即重新加载对应文件；关闭则需手动点击打开。"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"恢复会话时自动重新打开"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"恢复数据库面板时立即重新加载原文件；关闭则等待手动打开。"}}
         }
       }
       >div:nth-of-type(6){
@@ -2228,7 +2305,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       }
       >div:nth-of-type(4){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"预取分块大小"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"单次预取行数"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"数据浏览器每次预加载的行数。"}}
         }
       }
@@ -2287,7 +2364,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       }
       >div:nth-of-type(4){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"单元格显示字符上限"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"单元格字符显示上限"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"单个单元格截断前最多显示的字符数。"}}
         }
       }
@@ -2317,7 +2394,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       }
       >div:nth-of-type(9){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"转义字符"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"通配符转义字符"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"在筛选条件中置于 % 或 _ 前用于字面匹配。"}}
         }
       }
@@ -2398,25 +2475,25 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
     >.pf-rows{
       >div:nth-of-type(1){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"生成 SELECT 语句"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"拖放生成 SELECT 查询"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"将表或列拖入编辑器时生成 SELECT 查询。"}}
         }
       }
       >div:nth-of-type(2){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"生成 INSERT 语句"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"拖放生成 INSERT 语句"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"拖拽表或列时生成 INSERT 插入语句。"}}
         }
       }
       >div:nth-of-type(3){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"使用限定表名"}}
-          >div:nth-of-type(2){font-size:0;&::before{content:"生成的名称附带模式前缀（如 main.users）。"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"附带模式前缀"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"生成的表名附带模式前缀（如 main.users）。"}}
         }
       }
       >div:nth-of-type(4){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"添加标识符引号"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"标识符自动加引号"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"按 SQL 编辑器设置自动为表名和列名加引号。"}}
         }
       }
@@ -2486,7 +2563,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       }
       >div:nth-of-type(10){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"语法错误标记"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"标出报错语句"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"在编辑器中高亮标出执行失败的 SQL 语句。"}}
         }
       }
@@ -2498,7 +2575,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       }
       >div:nth-of-type(12){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"标签页显示关闭按钮"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"SQL 标签页显示关闭按钮"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"在每个 SQL 标签页上显示关闭图标。"}}
         }
       }
@@ -2547,13 +2624,13 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
     >.pf-rows{
       >div:nth-of-type(1){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"本机 Python 解释器"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"本机默认 Python 解释器"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"本机笔记本内核默认使用的 Python 路径；留空时自动检测虚拟环境或 python3。"}}
         }
       }
       >div:nth-of-type(2){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"打开笔记本时立即启动内核"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"打开笔记本时自动启动内核"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"关闭则延迟到首次运行单元格或代码补全时再启动内核。"}}
         }
       }
@@ -2564,7 +2641,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
     >.pf-rows{
       >div:nth-of-type(1){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"出错后停止后续运行"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"单元格报错后中止后续执行"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"当某个单元格报错时，中止队列中剩余单元格的执行。"}}
         }
       }
@@ -2604,7 +2681,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
     >.pf-rows{
       >div:nth-of-type(1){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"输出超过以下行数启用滚动"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"输出超过此行数时启用滚动"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"超出该行数的输出在单元格内滚动显示（按 O 可单独切换）。"}}
         }
       }
@@ -2616,7 +2693,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       }
       >div:nth-of-type(3){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"交互式 HTML 输出"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"交互式 HTML 渲染"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"在内置网页视图中运行含脚本的输出（Plotly、Bokeh 等）；关闭则仅静态显示。"}}
         }
       }
@@ -2771,7 +2848,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       >div:nth-of-type(2){
         >.pf-lbl{
           >div:nth-of-type(1){font-size:0;&::before{content:"在编辑器中启用输入法"}}
-          >div:nth-of-type(2){font-size:0;&::before{content:"在文件块的代码、文本和 Markdown 编辑器中启用中文等输入法（editor_ime）。"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在文件面板的代码、文本和 Markdown 编辑器中启用中文等输入法（editor_ime）。"}}
         }
       }
     }
@@ -2796,366 +2873,366 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       >div:nth-of-type(3)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"切换会话…"}}
       >div:nth-of-type(4)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"新建会话"}}
       >div:nth-of-type(5)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"重命名会话…"}}
-      >div:nth-of-type(6)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"锁定会话"}}
+      >div:nth-of-type(6)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"锁定/解锁会话"}}
       >div:nth-of-type(7)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"关闭会话"}}
-      >div:nth-of-type(8)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"会话上移"}}
-      >div:nth-of-type(9)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"会话下移"}}
-      >div:nth-of-type(10)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"折叠所有会话"}}
-      >div:nth-of-type(11)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"展开所有会话"}}
-      >div:nth-of-type(12)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"切换主机…"}}
+      >div:nth-of-type(8)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"将当前会话上移"}}
+      >div:nth-of-type(9)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"将当前会话下移"}}
+      >div:nth-of-type(10)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"折叠全部会话"}}
+      >div:nth-of-type(11)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"展开全部会话"}}
+      >div:nth-of-type(12)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"切换远程主机…"}}
       >div:nth-of-type(13)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"添加远程主机…"}}
       >div:nth-of-type(14)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"从手机连接…"}}
-      >div:nth-of-type(15)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"在指定主机新建会话…"}}
+      >div:nth-of-type(15)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"在远程主机新建会话…"}}
       >div:nth-of-type(16)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"断开远程主机…"}}
       >div:nth-of-type(17)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"移除已保存主机…"}}
-      >div:nth-of-type(18)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"发送到云端"}}
-      >div:nth-of-type(19)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"云端环境…"}}
-      >div:nth-of-type(20)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"配置云端环境…"}}
+      >div:nth-of-type(18)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"发送到云端环境"}}
+      >div:nth-of-type(19)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"管理云端环境…"}}
+      >div:nth-of-type(20)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"初始化云端环境…"}}
       >div:nth-of-type(21)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"下一个标签页"}}
-      >div:nth-of-type(22)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"按编号切换标签页"}}
+      >div:nth-of-type(22)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"按序号切换标签页"}}
       >div:nth-of-type(23)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"上一个标签页"}}
       >div:nth-of-type(24)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"跨会话下一个标签页"}}
       >div:nth-of-type(25)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"跨会话上一个标签页"}}
       >div:nth-of-type(26)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"标签页右移"}}
       >div:nth-of-type(27)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"标签页左移"}}
-      >div:nth-of-type(28)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"预览标签页"}}
-      >div:nth-of-type(29)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"调度中心"}}
+      >div:nth-of-type(28)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"快速预览标签页"}}
+      >div:nth-of-type(29)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"全局标签总览"}}
       >div:nth-of-type(30)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"重命名标签页…"}}
       >div:nth-of-type(31)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"关闭标签页"}}
-      >div:nth-of-type(32)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"重新打开已关闭标签页"}}
-      >div:nth-of-type(33)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"显示上一个标签页"}}
-      >div:nth-of-type(34)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"整理标签页标题"}}
+      >div:nth-of-type(32)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"恢复已关闭的标签页"}}
+      >div:nth-of-type(33)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"返回上次访问的标签页"}}
+      >div:nth-of-type(34)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"自动整理标签标题"}}
       >div:nth-of-type(35)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"复制会话链接"}}
-      >div:nth-of-type(36)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"聚焦标签栏"}}
-      >div:nth-of-type(37)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"切换标签栏方向"}}
-      >div:nth-of-type(38)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"顶部标签栏"}}
-      >div:nth-of-type(39)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"侧边标签栏"}}
+      >div:nth-of-type(36)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"聚焦到标签栏"}}
+      >div:nth-of-type(37)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"切换顶部/侧边标签栏"}}
+      >div:nth-of-type(38)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"设为顶部标签栏"}}
+      >div:nth-of-type(39)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"设为侧边标签栏"}}
       >div:nth-of-type(40)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"显示/隐藏侧边栏"}}
     }
   }
   >section.pf-sec:nth-of-type(6){
-    >h2.pf-sec-t{font-size:0;&::before{content:"块与分屏"}}
+    >h2.pf-sec-t{font-size:0;&::before{content:"面板与分屏"}}
     >.pf-rows{
-      >div:nth-of-type(1)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"新建 Carly 对话块"}}
-      >div:nth-of-type(2)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"新建终端块"}}
-      >div:nth-of-type(3)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"新建智能体块"}}
-      >div:nth-of-type(4)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"新建浏览器块…"}}
-      >div:nth-of-type(5)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"在分屏中打开网址"}}
-      >div:nth-of-type(6)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"新建任务管理器块"}}
-      >div:nth-of-type(7)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"进程性能分析"}}
-      >div:nth-of-type(8)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"新建 Git 块"}}
+      >div:nth-of-type(1)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"新建 Carly 对话面板"}}
+      >div:nth-of-type(2)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"新建终端面板"}}
+      >div:nth-of-type(3)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"新建智能体面板"}}
+      >div:nth-of-type(4)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"新建内置浏览器…"}}
+      >div:nth-of-type(5)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"在分屏中打开网页"}}
+      >div:nth-of-type(6)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"新建任务管理器"}}
+      >div:nth-of-type(7)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"进程性能剖析"}}
+      >div:nth-of-type(8)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"新建 Git 面板"}}
       >div:nth-of-type(9)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"审查代码变更"}}
       >div:nth-of-type(10)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"新建数据库…"}}
-      >div:nth-of-type(11)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"新建内存数据库"}}
+      >div:nth-of-type(11)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"新建临时内存数据库"}}
       >div:nth-of-type(12)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"打开数据库…"}}
-      >div:nth-of-type(13)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"以只读方式打开数据库…"}}
+      >div:nth-of-type(13)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"以只读模式打开数据库…"}}
       >div:nth-of-type(14)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"打开最近数据库"}}
-      >div:nth-of-type(15)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"新建看板块"}}
-      >div:nth-of-type(16)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"打开看板…"}}
-      >div:nth-of-type(17)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"以看板打开"}}
-      >div:nth-of-type(18)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"新建画板块"}}
-      >div:nth-of-type(19)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"打开画板文件…"}}
-      >div:nth-of-type(20)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"聚焦地址栏"}}
+      >div:nth-of-type(15)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"新建看板面板"}}
+      >div:nth-of-type(16)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"打开看板文件…"}}
+      >div:nth-of-type(17)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"以看板视图打开"}}
+      >div:nth-of-type(18)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"新建白板画布"}}
+      >div:nth-of-type(19)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"打开画布文件…"}}
+      >div:nth-of-type(20)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"聚焦到地址栏"}}
       >div:nth-of-type(21)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"检查网页元素"}}
-      >div:nth-of-type(22)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"向右拆分"}}
-      >div:nth-of-type(23)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"浏览器后退"}}
-      >div:nth-of-type(24)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"浏览器前进"}}
-      >div:nth-of-type(25)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"向下拆分"}}
-      >div:nth-of-type(26)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"缩放/还原块"}}
-      >div:nth-of-type(27)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"均分分屏"}}
+      >div:nth-of-type(22)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"向右分屏"}}
+      >div:nth-of-type(23)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"网页后退"}}
+      >div:nth-of-type(24)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"网页前进"}}
+      >div:nth-of-type(25)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"向下分屏"}}
+      >div:nth-of-type(26)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"最大化/还原当前面板"}}
+      >div:nth-of-type(27)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"均分面板尺寸"}}
       >div:nth-of-type(28)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"分隔线上移"}}
       >div:nth-of-type(29)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"分隔线下移"}}
       >div:nth-of-type(30)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"分隔线左移"}}
       >div:nth-of-type(31)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"分隔线右移"}}
-      >div:nth-of-type(32)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"下一个块"}}
-      >div:nth-of-type(33)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"上一个块"}}
-      >div:nth-of-type(34)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"聚焦左侧块"}}
-      >div:nth-of-type(35)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"聚焦右侧块"}}
-      >div:nth-of-type(36)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"聚焦上方块"}}
-      >div:nth-of-type(37)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"聚焦下方块"}}
-      >div:nth-of-type(38)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"重启 Shell"}}
-      >div:nth-of-type(39)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"关闭块"}}
+      >div:nth-of-type(32)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"切换到下一个面板"}}
+      >div:nth-of-type(33)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"切换到上一个面板"}}
+      >div:nth-of-type(34)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"聚焦左侧面板"}}
+      >div:nth-of-type(35)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"聚焦右侧面板"}}
+      >div:nth-of-type(36)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"聚焦上方面板"}}
+      >div:nth-of-type(37)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"聚焦下方面板"}}
+      >div:nth-of-type(38)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"重启终端"}}
+      >div:nth-of-type(39)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"关闭面板"}}
       >div:nth-of-type(40)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"录制当前面板"}}
-      >div:nth-of-type(41)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"块左移"}}
-      >div:nth-of-type(42)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"块右移"}}
-      >div:nth-of-type(43)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"块上移"}}
-      >div:nth-of-type(44)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"块下移"}}
-      >div:nth-of-type(45)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"将块移至标签页…"}}
-      >div:nth-of-type(46)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"将块移至会话…"}}
+      >div:nth-of-type(41)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"面板左移"}}
+      >div:nth-of-type(42)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"面板右移"}}
+      >div:nth-of-type(43)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"面板上移"}}
+      >div:nth-of-type(44)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"面板下移"}}
+      >div:nth-of-type(45)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"移至其他标签页…"}}
+      >div:nth-of-type(46)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"移至其他会话…"}}
     }
   }
   >section.pf-sec:nth-of-type(7){
-    >h2.pf-sec-t{font-size:0;&::before{content:"滚动缓冲区、查找与剪贴板"}}
+    >h2.pf-sec-t{font-size:0;&::before{content:"历史输出、查找与剪贴板"}}
     >.pf-rows{
-      >div:nth-of-type(1)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"在滚动缓冲区查找"}}
+      >div:nth-of-type(1)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"查找历史输出"}}
       >div:nth-of-type(2)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"复制"}}
-      >div:nth-of-type(3)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"上一个查找结果"}}
-      >div:nth-of-type(4)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"下一个查找结果"}}
+      >div:nth-of-type(3)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"上一个匹配结果"}}
+      >div:nth-of-type(4)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"下一个匹配结果"}}
       >div:nth-of-type(5)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"全选"}}
       >div:nth-of-type(6)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"粘贴"}}
-      >div:nth-of-type(7)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"粘贴选区"}}
-      >div:nth-of-type(8)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"跳到上一个提示符"}}
-      >div:nth-of-type(9)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"跳到下一个提示符"}}
-      >div:nth-of-type(10)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"跳到回复开头"}}
+      >div:nth-of-type(7)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"粘贴选中内容"}}
+      >div:nth-of-type(8)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"跳到上一条命令提示符"}}
+      >div:nth-of-type(9)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"跳到下一条命令提示符"}}
+      >div:nth-of-type(10)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"跳到当前回复开头"}}
       >div:nth-of-type(11)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"向上滚动一行"}}
       >div:nth-of-type(12)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"向下滚动一行"}}
       >div:nth-of-type(13)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"向上翻页"}}
       >div:nth-of-type(14)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"向下翻页"}}
-      >div:nth-of-type(15)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"滚动到顶部"}}
-      >div:nth-of-type(16)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"滚动到底部"}}
-      >div:nth-of-type(17)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"在编辑器中打开滚动缓冲区"}}
-      >div:nth-of-type(18)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"折叠/展开长输出"}}
-      >div:nth-of-type(19)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"清屏并清空滚动缓冲区"}}
-      >div:nth-of-type(20)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"跳转到目录…"}}
-      >div:nth-of-type(21)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"插入路径…"}}
+      >div:nth-of-type(15)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"滚动到最顶部"}}
+      >div:nth-of-type(16)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"滚动到最底部"}}
+      >div:nth-of-type(17)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"在编辑器中打开历史输出"}}
+      >div:nth-of-type(18)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"折叠/展开过长输出"}}
+      >div:nth-of-type(19)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"清屏并清除历史输出"}}
+      >div:nth-of-type(20)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"跳转到指定目录…"}}
+      >div:nth-of-type(21)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"插入文件路径…"}}
     }
   }
   >section.pf-sec:nth-of-type(8){
     >h2.pf-sec-t{font-size:0;&::before{content:"窗口"}}
     >.pf-rows{
-      >div:nth-of-type(1)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"命令面板"}}
-      >div:nth-of-type(2)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"保留为主窗口标签页"}}
+      >div:nth-of-type(1)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"打开命令面板"}}
+      >div:nth-of-type(2)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"转为主窗口标签页"}}
       >div:nth-of-type(3)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"询问 Carly…"}}
-      >div:nth-of-type(4)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"Carly：新建对话"}}
-      >div:nth-of-type(5)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"Carly：定时任务"}}
-      >div:nth-of-type(6)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"切换主机窗口…"}}
-      >div:nth-of-type(7)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"更新远程主机…"}}
+      >div:nth-of-type(4)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"Carly：发起新对话"}}
+      >div:nth-of-type(5)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"Carly：管理定时任务"}}
+      >div:nth-of-type(6)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"切换到主机对应窗口…"}}
+      >div:nth-of-type(7)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"更新远程主机端 Tern…"}}
       >div:nth-of-type(8)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"从云端拉回本地"}}
       >div:nth-of-type(9)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"新建浏览器画中画"}}
-      >div:nth-of-type(10)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"在画中画中打开网址"}}
-      >div:nth-of-type(11)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"新建屏幕共享块"}}
-      >div:nth-of-type(12)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"停止控制屏幕"}}
-      >div:nth-of-type(13)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"新建笔记本"}}
-      >div:nth-of-type(14)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"打开笔记本…"}}
-      >div:nth-of-type(15)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"暂存当前块"}}
-      >div:nth-of-type(16)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"查看已暂存的块"}}
-      >div:nth-of-type(17)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"增大字号"}}
-      >div:nth-of-type(18)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"减小字号"}}
-      >div:nth-of-type(19)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"重置字号"}}
-      >div:nth-of-type(20)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"更改主题…"}}
-      >div:nth-of-type(21)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"调整不透明度…"}}
-      >div:nth-of-type(22)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"调整背景模糊…"}}
-      >div:nth-of-type(23)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"外观：跟随系统"}}
-      >div:nth-of-type(24)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"外观：浅色"}}
-      >div:nth-of-type(25)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"外观：深色"}}
-      >div:nth-of-type(26)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"选中即复制"}}
-      >div:nth-of-type(27)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"自动对比度校正"}}
-      >div:nth-of-type(28)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"原生程序视图"}}
-      >div:nth-of-type(29)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"Markdown 标题：自动"}}
-      >div:nth-of-type(30)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"Markdown 标题：标记式"}}
-      >div:nth-of-type(31)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"Markdown 标题：分级字号"}}
-      >div:nth-of-type(32)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"差异视图：内联/分栏"}}
-      >div:nth-of-type(33)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"折叠工具调用"}}
-      >div:nth-of-type(34)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"展开思考过程"}}
-      >div:nth-of-type(35)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"输入框：纯文本/Markdown"}}
-      >div:nth-of-type(36)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"对话样式：阅读模式"}}
-      >div:nth-of-type(37)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"对话样式：时间轴"}}
-      >div:nth-of-type(38)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"对话样式：控制台"}}
-      >div:nth-of-type(39)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"原生提示符"}}
-      >div:nth-of-type(40)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"提示符样式…"}}
-      >div:nth-of-type(41)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"提示符：下一套配色"}}
-      >div:nth-of-type(42)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"提示符：下一种填充"}}
-      >div:nth-of-type(43)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"提示符：下一种形状"}}
-      >div:nth-of-type(44)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"提示符：下一种边框"}}
-      >div:nth-of-type(45)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"提示符：开关右侧封口线"}}
-      >div:nth-of-type(46)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"提示符：下一种间距填充"}}
-      >div:nth-of-type(47)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"提示符：下一个提示符号"}}
-      >div:nth-of-type(48)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"提示符：下一种分隔符"}}
-      >div:nth-of-type(49)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"提示符：下一种 Git 格式"}}
-      >div:nth-of-type(50)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"提示符：下一种目录格式"}}
-      >div:nth-of-type(51)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"提示符：开关图标"}}
-      >div:nth-of-type(52)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"提示符：下一种时钟格式"}}
-      >div:nth-of-type(53)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"提示符模块…"}}
-      >div:nth-of-type(54)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"折叠历史提示符"}}
-      >div:nth-of-type(55)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"下一个布局"}}
-      >div:nth-of-type(56)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"布局：导轨"}}
-      >div:nth-of-type(57)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"布局：悬浮"}}
-      >div:nth-of-type(58)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"布局：平铺"}}
-      >div:nth-of-type(59)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"布局：工作室"}}
-      >div:nth-of-type(60)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"设置…"}}
+      >div:nth-of-type(10)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"在画中画中打开网页"}}
+      >div:nth-of-type(11)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"新建屏幕共享面板"}}
+      >div:nth-of-type(12)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"退出屏幕控制"}}
+      >div:nth-of-type(13)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"新建交互式笔记本"}}
+      >div:nth-of-type(14)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"打开笔记本文件…"}}
+      >div:nth-of-type(15)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"暂存当前面板"}}
+      >div:nth-of-type(16)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"查看已暂存的面板"}}
+      >div:nth-of-type(17)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"放大字号"}}
+      >div:nth-of-type(18)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"缩小字号"}}
+      >div:nth-of-type(19)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"恢复默认字号"}}
+      >div:nth-of-type(20)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"切换配色主题…"}}
+      >div:nth-of-type(21)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"调整窗口不透明度…"}}
+      >div:nth-of-type(22)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"调整背景模糊度…"}}
+      >div:nth-of-type(23)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"外观模式：跟随系统"}}
+      >div:nth-of-type(24)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"外观模式：浅色"}}
+      >div:nth-of-type(25)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"外观模式：深色"}}
+      >div:nth-of-type(26)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"开关选中自动复制"}}
+      >div:nth-of-type(27)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"开关自动对比度增强"}}
+      >div:nth-of-type(28)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"开关原生界面渲染（TSP）"}}
+      >div:nth-of-type(29)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"Markdown 标题：自动适配"}}
+      >div:nth-of-type(30)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"Markdown 标题：等大加粗（带 # 号）"}}
+      >div:nth-of-type(31)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"Markdown 标题：分级放大字号"}}
+      >div:nth-of-type(32)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"代码改动对比：行内/分栏"}}
+      >div:nth-of-type(33)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"开关折叠工具调用记录"}}
+      >div:nth-of-type(34)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"开关默认展开思考过程"}}
+      >div:nth-of-type(35)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"对话输入框：纯文本/Markdown"}}
+      >div:nth-of-type(36)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"对话排版：阅读模式"}}
+      >div:nth-of-type(37)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"对话排版：时间轴"}}
+      >div:nth-of-type(38)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"对话排版：控制台"}}
+      >div:nth-of-type(39)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"开关原生提示符"}}
+      >div:nth-of-type(40)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"选择提示符预设风格…"}}
+      >div:nth-of-type(41)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"提示符：切换下一套配色"}}
+      >div:nth-of-type(42)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"提示符：切换填充形式"}}
+      >div:nth-of-type(43)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"提示符：切换色块形状"}}
+      >div:nth-of-type(44)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"提示符：切换边框引导线"}}
+      >div:nth-of-type(45)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"提示符：开关右侧连接线"}}
+      >div:nth-of-type(46)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"提示符：切换中段填充样式"}}
+      >div:nth-of-type(47)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"提示符：切换引导符号"}}
+      >div:nth-of-type(48)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"提示符：切换模块分隔符"}}
+      >div:nth-of-type(49)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"提示符：切换 Git 状态格式"}}
+      >div:nth-of-type(50)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"提示符：切换目录层级格式"}}
+      >div:nth-of-type(51)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"提示符：开关模块图标"}}
+      >div:nth-of-type(52)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"提示符：切换时间格式"}}
+      >div:nth-of-type(53)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"自定义提示符模块…"}}
+      >div:nth-of-type(54)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"开关折叠历史提示符"}}
+      >div:nth-of-type(55)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"切换下一种窗口布局"}}
+      >div:nth-of-type(56)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"窗口布局：导轨"}}
+      >div:nth-of-type(57)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"窗口布局：悬浮"}}
+      >div:nth-of-type(58)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"窗口布局：平铺"}}
+      >div:nth-of-type(59)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"窗口布局：工作室"}}
+      >div:nth-of-type(60)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"打开设置…"}}
       >div:nth-of-type(61)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"桌面宠物（Clawdi）"}}
-      >div:nth-of-type(62)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"打开 settings.json"}}
-      >div:nth-of-type(63)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"重新加载设置"}}
-      >div:nth-of-type(64)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"重新加载插件"}}
-      >div:nth-of-type(65)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"打开日志与应用状态"}}
+      >div:nth-of-type(62)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"编辑配置文件（settings.json）"}}
+      >div:nth-of-type(63)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"重新加载配置"}}
+      >div:nth-of-type(64)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"重新加载全部插件"}}
+      >div:nth-of-type(65)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"打开日志与诊断目录"}}
       >div:nth-of-type(66)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"打开应用数据目录"}}
       >div:nth-of-type(67)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"退出 Tern"}}
       >div:nth-of-type(68)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"重启 Tern"}}
-      >div:nth-of-type(69)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"显示待处理通知"}}
-      >div:nth-of-type(70)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"清空待处理通知"}}
-      >div:nth-of-type(71)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"显示/隐藏文件面板"}}
-      >div:nth-of-type(72)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"聚焦文件面板"}}
-      >div:nth-of-type(73)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"文件：定位当前文件"}}
-      >div:nth-of-type(74)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"文件：定位当前目录"}}
-      >div:nth-of-type(75)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"文件：固定目录 / 跟随块"}}
-      >div:nth-of-type(76)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"文件：打开文件夹…"}}
-      >div:nth-of-type(77)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"文件：上传到远程目录…"}}
-      >div:nth-of-type(78)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"文件：下载到本机"}}
-      >div:nth-of-type(79)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"文件：筛选…"}}
-      >div:nth-of-type(80)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"文件：全部折叠"}}
-      >div:nth-of-type(81)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"文件：显示/隐藏隐藏文件"}}
-      >div:nth-of-type(82)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"将块移至窗口…"}}
-      >div:nth-of-type(83)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"将标签页移至窗口…"}}
-      >div:nth-of-type(84)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"画中画"}}
-      >div:nth-of-type(85)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"将块置于画中画…"}}
-      >div:nth-of-type(86)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"隐藏所有画中画"}}
-      >div:nth-of-type(87)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"画中画停靠左侧"}}
-      >div:nth-of-type(88)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"画中画停靠右侧"}}
-      >div:nth-of-type(89)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"画中画停靠顶部"}}
-      >div:nth-of-type(90)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"画中画停靠底部"}}
+      >div:nth-of-type(69)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"打开待处理提醒"}}
+      >div:nth-of-type(70)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"清空待处理提醒"}}
+      >div:nth-of-type(71)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"显示/隐藏侧边文件栏"}}
+      >div:nth-of-type(72)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"聚焦到侧边文件栏"}}
+      >div:nth-of-type(73)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"文件栏：定位当前打开的文件"}}
+      >div:nth-of-type(74)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"文件栏：定位当前工作目录"}}
+      >div:nth-of-type(75)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"文件栏：固定目录 / 跟随面板"}}
+      >div:nth-of-type(76)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"文件栏：打开文件夹…"}}
+      >div:nth-of-type(77)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"文件栏：上传文件到远程目录…"}}
+      >div:nth-of-type(78)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"文件栏：下载文件到本机"}}
+      >div:nth-of-type(79)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"文件栏：按名称筛选…"}}
+      >div:nth-of-type(80)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"文件栏：折叠全部目录"}}
+      >div:nth-of-type(81)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"文件栏：显示/隐藏隐藏文件"}}
+      >div:nth-of-type(82)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"将面板移至其他窗口…"}}
+      >div:nth-of-type(83)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"将标签页移至其他窗口…"}}
+      >div:nth-of-type(84)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"以画中画悬浮当前面板"}}
+      >div:nth-of-type(85)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"将面板悬浮为画中画…"}}
+      >div:nth-of-type(86)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"隐藏全部画中画"}}
+      >div:nth-of-type(87)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"画中画停靠至左侧"}}
+      >div:nth-of-type(88)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"画中画停靠至右侧"}}
+      >div:nth-of-type(89)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"画中画停靠至顶部"}}
+      >div:nth-of-type(90)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"画中画停靠至底部"}}
       >div:nth-of-type(91)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"画中画移至左上角"}}
       >div:nth-of-type(92)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"画中画移至右上角"}}
       >div:nth-of-type(93)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"画中画移至左下角"}}
       >div:nth-of-type(94)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"画中画移至右下角"}}
-      >div:nth-of-type(95)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"块标题栏：从不"}}
-      >div:nth-of-type(96)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"块标题栏：分屏时"}}
-      >div:nth-of-type(97)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"块标题栏：始终"}}
-      >div:nth-of-type(98)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"显示/隐藏小组件栏"}}
-      >div:nth-of-type(99)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"编辑小组件…"}}
-      >div:nth-of-type(100)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"小组件栏样式：极简"}}
-      >div:nth-of-type(101)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"小组件栏样式：胶囊"}}
-      >div:nth-of-type(102)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"小组件栏样式：描边"}}
-      >div:nth-of-type(103)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"小组件栏样式：分隔线"}}
-      >div:nth-of-type(104)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"更改界面风格…"}}
-      >div:nth-of-type(105)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"窗口截图"}}
-      >div:nth-of-type(106)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"调试：显示 FPS"}}
-      >div:nth-of-type(107)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"切换开发者工具"}}
-      >div:nth-of-type(108)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"显示所有命令"}}
+      >div:nth-of-type(95)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"面板标题栏：从不显示"}}
+      >div:nth-of-type(96)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"面板标题栏：仅分屏时显示"}}
+      >div:nth-of-type(97)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"面板标题栏：始终显示"}}
+      >div:nth-of-type(98)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"显示/隐藏底部小组件栏"}}
+      >div:nth-of-type(99)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"自定义底部小组件…"}}
+      >div:nth-of-type(100)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"小组件栏风格：极简"}}
+      >div:nth-of-type(101)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"小组件栏风格：胶囊"}}
+      >div:nth-of-type(102)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"小组件栏风格：描边"}}
+      >div:nth-of-type(103)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"小组件栏风格：分隔线"}}
+      >div:nth-of-type(104)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"调整界面外观风格…"}}
+      >div:nth-of-type(105)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"截取窗口画面"}}
+      >div:nth-of-type(106)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"调试：显示/隐藏 FPS 帧率"}}
+      >div:nth-of-type(107)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"打开/关闭开发者工具"}}
+      >div:nth-of-type(108)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"浏览全部命令"}}
       >div:nth-of-type(109)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"打开文件…"}}
-      >div:nth-of-type(110)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"在项目中搜索…"}}
+      >div:nth-of-type(110)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"在项目中全局搜索…"}}
       >div:nth-of-type(111)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"新建笔记"}}
-      >div:nth-of-type(112)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"会话笔记"}}
-      >div:nth-of-type(113)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"块笔记"}}
-      >div:nth-of-type(114)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"重新打开已关闭笔记"}}
+      >div:nth-of-type(112)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"打开当前会话笔记"}}
+      >div:nth-of-type(113)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"打开当前面板笔记"}}
+      >div:nth-of-type(114)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"恢复已关闭的笔记"}}
       >div:nth-of-type(115)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"保存"}}
       >div:nth-of-type(116)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"另存为…"}}
-      >div:nth-of-type(117)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"恢复到已保存版本"}}
-      >div:nth-of-type(118)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"切换 Markdown 源码"}}
-      >div:nth-of-type(119)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"跳转到行…"}}
-      >div:nth-of-type(120)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"自动换行"}}
-      >div:nth-of-type(121)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"下一处更改"}}
-      >div:nth-of-type(122)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"上一处更改"}}
-      >div:nth-of-type(123)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"全部折叠"}}
-      >div:nth-of-type(124)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"全部展开"}}
-      >div:nth-of-type(125)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"指定编码重新打开…"}}
-      >div:nth-of-type(126)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"转换换行符…"}}
-      >div:nth-of-type(127)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"浏览文件夹…"}}
-      >div:nth-of-type(128)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"在文件资源管理器中显示"}}
-      >div:nth-of-type(129)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"用默认应用打开"}}
-      >div:nth-of-type(130)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"复制文件路径"}}
-      >div:nth-of-type(131)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"将选区发送给智能体"}}
-      >div:nth-of-type(132)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"登录 Stencil"}}
-      >div:nth-of-type(133)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"退出 Stencil"}}
-      >div:nth-of-type(134)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"检查更新"}}
-      >div:nth-of-type(135)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"更新日志"}}
-      >div:nth-of-type(136)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"配置 macOS 权限"}}
-      >div:nth-of-type(137)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"帮助与文档"}}
+      >div:nth-of-type(117)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"放弃修改并恢复已保存版本"}}
+      >div:nth-of-type(118)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"切换 Markdown 源码/预览"}}
+      >div:nth-of-type(119)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"跳转到指定行…"}}
+      >div:nth-of-type(120)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"切换自动换行"}}
+      >div:nth-of-type(121)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"跳到下一处代码改动"}}
+      >div:nth-of-type(122)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"跳到上一处代码改动"}}
+      >div:nth-of-type(123)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"折叠全部代码块"}}
+      >div:nth-of-type(124)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"展开全部代码块"}}
+      >div:nth-of-type(125)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"指定字符编码重新打开…"}}
+      >div:nth-of-type(126)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"转换换行符（LF/CRLF）…"}}
+      >div:nth-of-type(127)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"浏览所在目录…"}}
+      >div:nth-of-type(128)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"在文件资源管理器中定位"}}
+      >div:nth-of-type(129)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"使用系统默认程序打开"}}
+      >div:nth-of-type(130)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"复制文件完整路径"}}
+      >div:nth-of-type(131)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"将选中内容发送给智能体"}}
+      >div:nth-of-type(132)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"登录 Stencil 账户"}}
+      >div:nth-of-type(133)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"退出 Stencil 账户"}}
+      >div:nth-of-type(134)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"检查软件更新"}}
+      >div:nth-of-type(135)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"查看更新日志"}}
+      >div:nth-of-type(136)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"配置 macOS 系统权限"}}
+      >div:nth-of-type(137)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"帮助与官方文档"}}
       >div:nth-of-type(138)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"反馈性能问题"}}
-      >div:nth-of-type(139)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"反馈问题或功能建议…"}}
-      >div:nth-of-type(140)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"重启并更新"}}
-      >div:nth-of-type(141)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"重启会话守护进程"}}
+      >div:nth-of-type(139)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"反馈缺陷或功能建议…"}}
+      >div:nth-of-type(140)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"重启并应用更新"}}
+      >div:nth-of-type(141)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"重启后台会话服务"}}
       >div:nth-of-type(142)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"安装 omp"}}
       >div:nth-of-type(143)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"检查 omp 更新"}}
-      >div:nth-of-type(144)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"停止托管 omp"}}
+      >div:nth-of-type(144)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"取消由 Tern 托管 omp"}}
       >div:nth-of-type(145)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"安装 ovnfs"}}
       >div:nth-of-type(146)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"检查 ovnfs 更新"}}
-      >div:nth-of-type(147)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"停止托管 ovnfs"}}
+      >div:nth-of-type(147)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"取消由 Tern 托管 ovnfs"}}
       >div:nth-of-type(148)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"安装 ABKit"}}
       >div:nth-of-type(149)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"检查 ABKit 更新"}}
-      >div:nth-of-type(150)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"停止托管 ABKit"}}
+      >div:nth-of-type(150)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"取消由 Tern 托管 ABKit"}}
     }
   }
   >section.pf-sec:nth-of-type(9){
     >h2.pf-sec-t{font-size:0;&::before{content:"编辑器"}}
     >.pf-rows{
-      >div:nth-of-type(1)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"在上方插入新行"}}
-      >div:nth-of-type(2)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"选中所有匹配项"}}
-      >div:nth-of-type(3)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"向左按子词移动"}}
-      >div:nth-of-type(4)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"向右按子词移动"}}
-      >div:nth-of-type(5)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"向前删除子词"}}
-      >div:nth-of-type(6)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"合并行"}}
-      >div:nth-of-type(7)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"选中下一个匹配项"}}
-      >div:nth-of-type(8)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"复制当前块"}}
-      >div:nth-of-type(9)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"向上复制行"}}
-      >div:nth-of-type(10)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"向下复制行"}}
-      >div:nth-of-type(11)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"缩小选区"}}
-      >div:nth-of-type(12)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"扩大选区"}}
+      >div:nth-of-type(1)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"在当前行上方插入空行"}}
+      >div:nth-of-type(2)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"选中全部相同内容"}}
+      >div:nth-of-type(3)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"按子词左移光标"}}
+      >div:nth-of-type(4)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"按子词右移光标"}}
+      >div:nth-of-type(5)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"向前删除一个子词"}}
+      >div:nth-of-type(6)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"合并选中行"}}
+      >div:nth-of-type(7)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"追加选中下一处相同内容"}}
+      >div:nth-of-type(8)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"复制当前内容块"}}
+      >div:nth-of-type(9)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"向上复制当前行"}}
+      >div:nth-of-type(10)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"向下复制当前行"}}
+      >div:nth-of-type(11)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"缩小智能选区"}}
+      >div:nth-of-type(12)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"扩大智能选区"}}
       >div:nth-of-type(13)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"复制"}}
       >div:nth-of-type(14)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"粘贴"}}
-      >div:nth-of-type(15)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"查找下一个"}}
-      >div:nth-of-type(16)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"查找上一个"}}
+      >div:nth-of-type(15)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"查找下一处"}}
+      >div:nth-of-type(16)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"查找上一处"}}
       >div:nth-of-type(17)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"重做"}}
-      >div:nth-of-type(18)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"删除线"}}
-      >div:nth-of-type(19)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"插入链接"}}
-      >div:nth-of-type(20)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"用选区内容查找"}}
+      >div:nth-of-type(18)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"添加/取消删除线"}}
+      >div:nth-of-type(19)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"插入超链接"}}
+      >div:nth-of-type(20)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"将选中文字填入查找框"}}
       >div:nth-of-type(21)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"切换自动换行"}}
-      >div:nth-of-type(22)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"下一处更改"}}
-      >div:nth-of-type(23)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"上一处更改"}}
+      >div:nth-of-type(22)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"跳到下一处代码改动"}}
+      >div:nth-of-type(23)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"跳到上一处代码改动"}}
       >div:nth-of-type(24)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"加粗"}}
       >div:nth-of-type(25)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"撤销"}}
       >div:nth-of-type(26)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"下移当前行"}}
-      >div:nth-of-type(27)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"下移当前块"}}
+      >div:nth-of-type(27)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"下移当前内容块"}}
       >div:nth-of-type(28)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"上移当前行"}}
-      >div:nth-of-type(29)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"上移当前块"}}
-      >div:nth-of-type(30)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"插入硬换行"}}
-      >div:nth-of-type(31)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"跳出行内代码块"}}
-      >div:nth-of-type(32)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"在下方插入新行"}}
-      >div:nth-of-type(33)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"向上扩展块选择"}}
-      >div:nth-of-type(34)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"向下扩展块选择"}}
+      >div:nth-of-type(29)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"上移当前内容块"}}
+      >div:nth-of-type(30)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"插入强制换行"}}
+      >div:nth-of-type(31)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"跳出行内代码区"}}
+      >div:nth-of-type(32)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"在当前行下方插入空行"}}
+      >div:nth-of-type(33)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"向上扩展内容块选区"}}
+      >div:nth-of-type(34)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"向下扩展内容块选区"}}
       >div:nth-of-type(35)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"查找并替换"}}
       >div:nth-of-type(36)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"增加缩进"}}
       >div:nth-of-type(37)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"减少缩进"}}
       >div:nth-of-type(38)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"减少缩进"}}
-      >div:nth-of-type(39)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"在上方添加光标"}}
-      >div:nth-of-type(40)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"在下方添加光标"}}
-      >div:nth-of-type(41)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"跳过当前匹配项"}}
+      >div:nth-of-type(39)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"在上一行添加多光标"}}
+      >div:nth-of-type(40)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"在下一行添加多光标"}}
+      >div:nth-of-type(41)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"跳过当前匹配并选中下一处"}}
       >div:nth-of-type(42)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"选中整行"}}
-      >div:nth-of-type(43)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"在选中各行末尾添加光标"}}
+      >div:nth-of-type(43)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"在各选行末尾放置光标"}}
       >div:nth-of-type(44)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"切换行注释"}}
       >div:nth-of-type(45)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"取消选择/关闭浮层"}}
-      >div:nth-of-type(46)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"查找"}}
-      >div:nth-of-type(47)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"跳转到行"}}
-      >div:nth-of-type(48)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"删除至行尾"}}
-      >div:nth-of-type(49)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"粘贴删除缓冲"}}
-      >div:nth-of-type(50)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"向左按子词扩展选区"}}
-      >div:nth-of-type(51)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"向右按子词扩展选区"}}
-      >div:nth-of-type(52)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"向后删除子词"}}
-      >div:nth-of-type(53)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"折叠代码"}}
-      >div:nth-of-type(54)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"展开代码"}}
-      >div:nth-of-type(55)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"切换折叠"}}
-      >div:nth-of-type(56)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"全部折叠"}}
-      >div:nth-of-type(57)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"全部展开"}}
+      >div:nth-of-type(46)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"页内查找"}}
+      >div:nth-of-type(47)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"跳转到指定行"}}
+      >div:nth-of-type(48)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"删除至行尾（存入剪贴缓冲）"}}
+      >div:nth-of-type(49)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"粘贴已剪切行（Yank）"}}
+      >div:nth-of-type(50)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"按子词向左扩展选区"}}
+      >div:nth-of-type(51)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"按子词向右扩展选区"}}
+      >div:nth-of-type(52)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"向后删除一个子词"}}
+      >div:nth-of-type(53)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"折叠当前代码块"}}
+      >div:nth-of-type(54)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"展开当前代码块"}}
+      >div:nth-of-type(55)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"切换代码折叠状态"}}
+      >div:nth-of-type(56)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"折叠全部代码块"}}
+      >div:nth-of-type(57)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"展开全部代码块"}}
       >div:nth-of-type(58)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"斜体"}}
     }
   }
   >section.pf-sec:nth-of-type(10){
     >h2.pf-sec-t{font-size:0;&::before{content:"数据库"}}
     >.pf-rows{
-      >div:nth-of-type(1)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"复制到 SQL 编辑器"}}
-      >div:nth-of-type(2)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"连同表头复制"}}
-      >div:nth-of-type(3)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"编辑单元格：复制 Hex 与 ASCII"}}
-      >div:nth-of-type(4)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"筛选此列"}}
-      >div:nth-of-type(5)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"查找下一个"}}
-      >div:nth-of-type(6)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"查找上一个"}}
-      >div:nth-of-type(7)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"放大 SQL 编辑器"}}
-      >div:nth-of-type(8)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"缩小 SQL 编辑器"}}
-      >div:nth-of-type(9)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"重置 SQL 编辑器缩放"}}
-      >div:nth-of-type(10)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"在任意列筛选"}}
-      >div:nth-of-type(11)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"写入更改"}}
-      >div:nth-of-type(12)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"单元格编辑面板"}}
+      >div:nth-of-type(1)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"复制为 SQL 编辑器可用格式"}}
+      >div:nth-of-type(2)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"连同列名一起复制"}}
+      >div:nth-of-type(3)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"单元格编辑：复制十六进制与 ASCII"}}
+      >div:nth-of-type(4)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"按当前列筛选"}}
+      >div:nth-of-type(5)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"查找下一处"}}
+      >div:nth-of-type(6)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"查找上一处"}}
+      >div:nth-of-type(7)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"放大 SQL 编辑器字号"}}
+      >div:nth-of-type(8)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"缩小 SQL 编辑器字号"}}
+      >div:nth-of-type(9)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"重置 SQL 编辑器字号"}}
+      >div:nth-of-type(10)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"在全部列中筛选"}}
+      >div:nth-of-type(11)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"保存更改到数据库"}}
+      >div:nth-of-type(12)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"打开单元格详情编辑器"}}
       >div:nth-of-type(13)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"加粗"}}
       >div:nth-of-type(14)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"撤销上次修改"}}
-      >div:nth-of-type(15)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"删除所选对象"}}
-      >div:nth-of-type(16)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"删除记录或清空单元格"}}
-      >div:nth-of-type(17)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"清空单元格"}}
-      >div:nth-of-type(18)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"浏览所选表"}}
+      >div:nth-of-type(15)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"删除所选数据库对象"}}
+      >div:nth-of-type(16)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"删除所选行或清空单元格"}}
+      >div:nth-of-type(17)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"清空所选单元格"}}
+      >div:nth-of-type(18)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"浏览所选数据表"}}
       >div:nth-of-type(19)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"刷新数据库结构"}}
       >div:nth-of-type(20)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"执行全部/选中 SQL"}}
-      >div:nth-of-type(21)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"保存 PRAGMA 设置"}}
-      >div:nth-of-type(22)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"编辑单元格：应用"}}
+      >div:nth-of-type(21)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"保存 PRAGMA 配置"}}
+      >div:nth-of-type(22)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"单元格编辑：应用修改"}}
       >div:nth-of-type(23)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"全选"}}
       >div:nth-of-type(24)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"查找并替换"}}
-      >div:nth-of-type(25)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"图表面板"}}
+      >div:nth-of-type(25)>.pf-lbl>div:nth-of-type(1){font-size:0;&::before{content:"打开图表可视化面板"}}
     }
   }
 }
@@ -3171,7 +3248,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       >div:nth-of-type(1){
         >.pf-lbl{
           >div:nth-of-type(1){font-size:0;&::before{content:"自动拉取间隔"}}
-          >div:nth-of-type(2){font-size:0;&::before{content:"按此间隔在后台自动拉取已打开 Git 块的所有远程仓库更新。"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"按此间隔在后台自动拉取已打开 Git 面板的所有远程仓库更新。"}}
         }
       }
       >div:nth-of-type(2){
@@ -3183,7 +3260,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       >div:nth-of-type(3){
         >.pf-lbl{
           >div:nth-of-type(1){font-size:0;&::before{content:"拉取（Pull）按钮策略"}}
-          >div:nth-of-type(2){font-size:0;&::before{content:"设置 Git 工具栏中 Pull 按钮整合上游更新的方式。"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"设置 Git 面板工具栏中 Pull 按钮整合上游更新的方式。"}}
         }
         >.pf-ctl{
           >.pf-seg{
@@ -3387,7 +3464,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       >div:nth-of-type(2){
         >.pf-lbl{
           >div:nth-of-type(1){font-size:0;&::before{content:"测试外部编辑器"}}
-          >div:nth-of-type(2){font-size:0;&::before{content:"聚焦到本机 Git 仓库所在的终端或 Git 块后可点击测试。"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"聚焦到本机 Git 仓库所在的终端或 Git 面板后可点击测试。"}}
         }
         >.pf-ctl{
           >button{font-size:0;&::after{content:"打开编辑器"}}
@@ -3444,7 +3521,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
     >h2.pf-sec-t{font-size:0;&::before{content:"当前仓库"}}
     >.pf-rows{
       >div{
-        >span{font-size:0;&::before{content:"未检测到当前仓库：请先聚焦到一个 Git 块或位于仓库中的终端，以配置 Git-flow、LFS 和稀疏检出。"}}
+        >span{font-size:0;&::before{content:"未检测到当前仓库：请先聚焦到一个 Git 面板或位于仓库中的终端，以配置 Git-flow、LFS 和稀疏检出。"}}
       }
     }
   }
@@ -3491,7 +3568,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
   > section.pf-sec > .pf-rows {
     > div.pf-row:first-of-type > .pf-lbl {
       > div.t { font-size: 0; &::before { content: "加载插件"; } }
-      > div.h { font-size: 0; &::before { content: "插件目录中的插件可扩展面板块、命令视图、命令与样式；关闭后不加载任何插件。"; } }
+      > div.h { font-size: 0; &::before { content: "插件目录中的插件可扩展面板类型、命令视图、命令与样式；关闭后不加载任何插件。"; } }
     }
     > div.pf-row:nth-last-of-type(2) {
       > .pf-lbl {
@@ -3524,7 +3601,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       }
       >div:nth-of-type(2){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"开机登录时自动启动"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"随系统登录启动"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"登录系统时静默启动后台守护进程并恢复保留的会话，异常断电或崩溃后可无缝续接。"}}
         }
       }
@@ -3536,7 +3613,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       }
       >div:nth-of-type(4){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"通信管道（Socket）"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"守护进程通信通道（Socket）"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"窗口与终端内命令行连接守护进程使用的地址。"}}
         }
       }
@@ -3556,7 +3633,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       >div:nth-of-type(2){
         >.pf-lbl{
           >div:nth-of-type(1){font-size:0;&::before{content:"点击其他会话的标签页时"}}
-          >div:nth-of-type(2){font-size:0;&::before{content:"在侧边标签栏或调度中心点击其他会话标签时的行为。“保持当前”需双击才会切换会话。"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"在侧边标签栏或全局标签总览点击其他会话标签时的行为。“保持当前”需双击才会切换会话。"}}
         }
         >.pf-ctl{
           >.pf-seg{
@@ -3583,13 +3660,13 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
     >.pf-rows{
       >div:nth-of-type(1){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"关闭前确认"}}
-          >div:nth-of-type(2){font-size:0;&::before{content:"关闭块、标签或会话前是否确认。“有程序运行时”仅在命令或智能体忙碌时询问；锁定会话拒绝关闭。"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"关闭前二次确认"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"关闭面板、标签页或会话前是否二次确认。“有活跃任务时”仅在命令或智能体运行时询问；锁定会话将禁止关闭。"}}
         }
         >.pf-ctl{
           >.pf-seg{
             >button:nth-of-type(1){font-size:0;&::after{content:"从不"}}
-            >button:nth-of-type(2){font-size:0;&::after{content:"有程序运行时"}}
+            >button:nth-of-type(2){font-size:0;&::after{content:"有活跃任务时"}}
             >button:nth-of-type(3){font-size:0;&::after{content:"始终"}}
           }
         }
@@ -3597,7 +3674,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       >div:nth-of-type(2){
         >.pf-lbl{
           >div:nth-of-type(1){font-size:0;&::before{content:"自动关闭空会话"}}
-          >div:nth-of-type(2){font-size:0;&::before{content:"当会话的最后一个标签页关闭或移走后自动关闭该空会话（锁定或含暂存块的会话除外）。"}}
+          >div:nth-of-type(2){font-size:0;&::before{content:"当会话的最后一个标签页关闭或移走后自动关闭该空会话（锁定或含暂存面板的会话除外）。"}}
         }
       }
     }
@@ -3614,7 +3691,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
     >.pf-rows{
       >div{
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"允许网页共享本机会话"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"共享本机会话给浏览器"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"允许通过 tern web serve 将本机会话共享给浏览器访问；不影响连接到其他远程主机。"}}
         }
       }
@@ -3780,7 +3857,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
       }
       >div:nth-of-type(7){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"预渲染帧队列数"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"GPU 预渲染队列深度"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"允许 GPU 提前准备的帧数：越小输入响应越快，越大复杂动画越流畅。"}}
         }
       }
@@ -3813,7 +3890,7 @@ button.tb-files > span.lbl::before { content: "文件"; font-size: 13px; white-s
     >.pf-rows{
       >div:nth-of-type(1){
         >.pf-lbl{
-          >div:nth-of-type(1){font-size:0;&::before{content:"日志与应用状态"}}
+          >div:nth-of-type(1){font-size:0;&::before{content:"日志与运行状态"}}
           >div:nth-of-type(2){font-size:0;&::before{content:"包含各进程日志、当前状态快照以及跨会话持久化的应用状态。"}}
         }
         >.pf-ctl{
