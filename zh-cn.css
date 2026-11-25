@@ -1,5 +1,5 @@
 /* ============================================================================
- * Tern 简体中文全面汉化插件样式 (zh-cn v0.4.0)
+ * Tern 简体中文全面汉化插件样式 (zh-cn v0.5.0)
  * 适配版本：Tern 0.9.34
  *
  * 原理说明：
@@ -229,6 +229,121 @@ div.pop.ctx:has(> div.mi-row) {
   > div.sep:last-of-type + button.mi::after { content: "锁定会话"; }
   > div.sep:last-of-type + button.mi + button.mi::after { content: "关闭标签页"; }
   > div.sep:last-of-type + button.mi + button.mi + button.mi::after { content: "恢复已关闭的标签页"; }
+}
+
+/* ── 5g. 悬停工具提示气泡（DOM Tooltip，通过 :root:has([title]:hover) 精准汉化并保留原快捷键） ── */
+div.tooltip > span.tt-lbl::before { font-size: 12px; white-space: nowrap; }
+:root {
+  /* 顶部标签栏与面板快捷新建按钮 */
+  &:has([title^="New tab"]:hover) div.tooltip > span.tt-lbl { font-size: 0; white-space: nowrap; &::before { content: "新建标签页"; } }
+  &:has([title^="Terminal"]:hover) div.tooltip > span.tt-lbl { font-size: 0; white-space: nowrap; &::before { content: "终端"; } }
+  &:has([title="Agent"]:hover, [title^="Agent  "]:hover) div.tooltip > span.tt-lbl { font-size: 0; white-space: nowrap; &::before { content: "智能体"; } }
+  &:has([title^="Browser"]:hover) div.tooltip > span.tt-lbl { font-size: 0; white-space: nowrap; &::before { content: "浏览器"; } }
+  &:has([title="Note"]:hover, [title^="Note  "]:hover) div.tooltip > span.tt-lbl { font-size: 0; white-space: nowrap; &::before { content: "笔记"; } }
+  &:has([title^="Notebook"]:hover) div.tooltip > span.tt-lbl { font-size: 0; white-space: nowrap; &::before { content: "笔记本"; } }
+  &:has([title^="Database"]:hover) div.tooltip > span.tt-lbl { font-size: 0; white-space: nowrap; &::before { content: "数据库"; } }
+  &:has([title^="Board"]:hover) div.tooltip > span.tt-lbl { font-size: 0; white-space: nowrap; &::before { content: "看板"; } }
+  &:has([title^="Canvas"]:hover) div.tooltip > span.tt-lbl { font-size: 0; white-space: nowrap; &::before { content: "画板"; } }
+  &:has([title^="Task manager"]:hover) div.tooltip > span.tt-lbl { font-size: 0; white-space: nowrap; &::before { content: "任务管理器"; } }
+  &:has([title^="Screen"]:hover) div.tooltip > span.tt-lbl { font-size: 0; white-space: nowrap; &::before { content: "屏幕共享"; } }
+  &:has([title^="Git"]:hover) div.tooltip > span.tt-lbl { font-size: 0; white-space: nowrap; &::before { content: "Git 仓库"; } }
+  &:has([title="Close tab"]:hover, [title^="Close tab  "]:hover) div.tooltip > span.tt-lbl { font-size: 0; white-space: nowrap; &::before { content: "关闭标签页"; } }
+  &:has(button.tn-session-tab[title*="Switch session…"]:hover) div.tooltip > span.tt-lbl { font-size: 0; white-space: nowrap; &::before { content: "切换会话…"; } }
+
+  /* 顶部右侧工具栏与窗口控制按钮 */
+  &:has([title^="Show Files"]:hover) div.tooltip > span.tt-lbl { font-size: 0; white-space: nowrap; &::before { content: "显示文件面板"; } }
+  &:has([title^="Hide Files"]:hover) div.tooltip > span.tt-lbl { font-size: 0; white-space: nowrap; &::before { content: "隐藏文件面板"; } }
+  &:has([title^="Split right"]:hover) div.tooltip > span.tt-lbl { font-size: 0; white-space: nowrap; &::before { content: "向右分屏"; } }
+  &:has([title^="Split down"]:hover) div.tooltip > span.tt-lbl { font-size: 0; white-space: nowrap; &::before { content: "向下分屏"; } }
+  &:has([title^="Find in scrollback"]:hover) div.tooltip > span.tt-lbl { font-size: 0; white-space: nowrap; &::before { content: "查找历史输出"; } }
+  &:has([title^="Run a command…"]:hover) div.tooltip > span.tt-lbl { font-size: 0; white-space: nowrap; &::before { content: "运行命令…"; } }
+  &:has([title^="Settings…"]:hover) div.tooltip > span.tt-lbl { font-size: 0; white-space: nowrap; &::before { content: "设置…"; } }
+  &:has([title^="Nothing needs you"]:hover) div.tooltip > span.tt-lbl { font-size: 0; white-space: nowrap; &::before { content: "暂无待处理"; } }
+  &:has([title="Minimize"]:hover) div.tooltip > span.tt-lbl { font-size: 0; white-space: nowrap; &::before { content: "最小化"; } }
+  &:has([title="Maximize"]:hover) div.tooltip > span.tt-lbl { font-size: 0; white-space: nowrap; &::before { content: "最大化"; } }
+  &:has([title="Restore"]:hover, [title="Unmaximize"]:hover) div.tooltip > span.tt-lbl { font-size: 0; white-space: nowrap; &::before { content: "还原窗口"; } }
+  &:has([title="Close"]:hover, [title^="Close  "]:hover) div.tooltip > span.tt-lbl { font-size: 0; white-space: nowrap; &::before { content: "关闭"; } }
+
+  /* 面板操作、拖拽手柄、安全输入与查找栏 */
+  &:has([title^="Drag to move the pane"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "拖拽移动面板 · 点击打开菜单"; } }
+  &:has([title^="Drag to resize"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "拖拽调整宽度 · 双击恢复默认"; } }
+  &:has([title^="Secure Keyboard Entry is on"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "安全键盘输入已开启：其他应用无法读取你的输入"; } }
+  &:has([title^="Float pane"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "悬浮面板"; } }
+  &:has([title^="Unfloat pane"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "取消悬浮"; } }
+  &:has([title^="Zoom pane"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "放大当前面板"; } }
+  &:has([title^="Unzoom pane"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "恢复面板大小"; } }
+  &:has([title^="Park pane"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "暂存当前面板"; } }
+  &:has([title^="Close pane"]:hover, [title^="Close block"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "关闭面板"; } }
+  &:has([title^="Previous match"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "上一个匹配项"; } }
+  &:has([title^="Next match"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "下一个匹配项"; } }
+
+  /* 设置界面、弹窗、快捷键与小组件按钮提示 */
+  &:has([title^="Close settings"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "关闭设置"; } }
+  &:has([title^="Hold to see behind Settings"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "按住可透视后方窗口"; } }
+  &:has([title^="Search settings"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "搜索设置"; } }
+  &:has([title="Clear"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "清空"; } }
+  &:has([title^="Clear all"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "全部清除"; } }
+  &:has([title="Add a shortcut"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "添加快捷键"; } }
+  &:has(.pf-chord-x[title^="Remove "]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "移除此快捷键"; } }
+  &:has([title="Remove"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "移除"; } }
+  &:has([title="Move up"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "上移"; } }
+  &:has([title="Move down"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "下移"; } }
+  &:has([title^="Decrease "]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "减小数值"; } }
+  &:has([title^="Increase "]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "增大数值"; } }
+  &:has([title^="Close session"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "关闭会话"; } }
+  &:has([title^="Rename session"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "重命名会话"; } }
+  &:has([title^="Switch session…"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "切换会话…"; } }
+  &:has([title^="Switch host…"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "切换主机…"; } }
+  &:has([title^="Add remote host…"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "添加远程主机…"; } }
+  &:has([title="Sign out"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "退出登录"; } }
+  &:has([title^="Opens your account"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "访问 Stencil 账户"; } }
+  &:has([title^="Open settings.json"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "打开 settings.json"; } }
+  &:has([title^="Reload settings"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "重载设置"; } }
+  &:has([title^="Reload plugins"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "重载插件"; } }
+  &:has([title^="Open app data folder"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "打开应用数据目录"; } }
+  &:has([title^="Open logs and app state"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "打开日志与运行状态"; } }
+  &:has([title="Copy socket"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "复制通信通道地址"; } }
+  &:has([title="Copy configuration folder"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "复制配置目录路径"; } }
+  &:has([title="Copy logs folder"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "复制日志目录路径"; } }
+  &:has([title="Copy themes folder"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "复制主题目录路径"; } }
+  &:has([title="Copy syntaxes folder"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "复制语法目录路径"; } }
+  &:has([title="Copy drawing with"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "复制当前渲染设备信息"; } }
+  &:has([title^="Drag it into the bar"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "拖入底部栏，或点击添加到末尾"; } }
+  &:has([title="Picks go to the left side"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "所选模块添加到左侧"; } }
+  &:has([title="Picks go to the right side"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "所选模块添加到右侧"; } }
+  &:has([title="Run this task now"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "立即运行此任务"; } }
+  &:has([title="Pause or resume this task"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "暂停或恢复此任务"; } }
+  &:has([title="Run history for Heartbeat"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "查看定时巡检记录"; } }
+  &:has([title="Carly: New conversation"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "Carly：新建对话"; } }
+  &:has([title="No pane of this tab is in a git checkout"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "当前标签页内没有位于 Git 仓库中的面板"; } }
+
+  /* 命令面板作用域与标签颜色色板 */
+  &:has([title^="All  "]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "全部"; } }
+  &:has([title^="Commands  "]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "命令"; } }
+  &:has([title^="Files  "]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "文件"; } }
+  &:has([title^="Search  "]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "搜索"; } }
+  &:has([title^="Branches  "]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "分支"; } }
+  &:has([title^="Commits  "]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "提交"; } }
+  &:has([title^="Sessions  "]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "会话"; } }
+  &:has([title^="Hosts  "]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "主机"; } }
+  &:has(button.tn-tc-sw[title="No color"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "无颜色"; } }
+  &:has(button.tn-tc-sw[title="Red"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "红色"; } }
+  &:has(button.tn-tc-sw[title="Orange"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "橙色"; } }
+  &:has(button.tn-tc-sw[title="Yellow"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "黄色"; } }
+  &:has(button.tn-tc-sw[title="Green"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "绿色"; } }
+  &:has(button.tn-tc-sw[title="Teal"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "青色"; } }
+  &:has(button.tn-tc-sw[title="Blue"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "蓝色"; } }
+  &:has(button.tn-tc-sw[title="Purple"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "紫色"; } }
+  &:has(button.tn-tc-sw[title="Pink"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "粉色"; } }
+
+  /* omp 对话操作提示 */
+  &:has([title^="Switch model"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "切换模型"; } }
+  &:has([title^="Send  "]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "发送"; } }
+  &:has([title="Copy message"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "复制消息"; } }
+  &:has([title="Copy answer"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "复制回复"; } }
+  &:has([title^="Rewind the conversation"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "回溯对话到此处"; } }
+  &:has([title="Auto-compact at 85%"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "上下文达 85% 时自动压缩"; } }
+  &:has([title="Recap while you were away"]:hover) div.tooltip > span.tt-lbl { font-size: 0; &::before { content: "离开期间的对话摘要"; } }
 }
 
 /* ── 6. 设置窗口（Settings）左侧导航与通用元素 ── */
