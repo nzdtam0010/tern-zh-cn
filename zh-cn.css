@@ -1,5 +1,5 @@
 /* ============================================================================
- * Tern 简体中文全面汉化插件样式 (zh-cn v0.5.3)
+ * Tern 简体中文全面汉化插件样式 (zh-cn v0.5.4)
  * 适配版本：Tern 0.9.34
  *
  * 原理说明：
@@ -36,7 +36,12 @@
 .tn-pl-scopes .tn-pl-scope[title^="Hosts"] { font-size: 0; }
 .tn-pl-scopes .tn-pl-scope[title^="Hosts"]::before { content: "主机"; font-size: 12px; white-space: nowrap; }
 
-/* 命令面板底部快捷键提示 */
+/* 命令面板底部快捷键提示与空状态 */
+.tn-cmdk .tn-pl-empty-t { font-size: 0; white-space: nowrap !important; max-width: none !important; width: auto !important; }
+.tn-cmdk .tn-pl-empty-t::before { content: "未找到匹配结果"; font-size: 14px; font-weight: 550; white-space: nowrap; }
+.tn-cmdk .tn-pl-empty-s { font-size: 0; white-space: nowrap !important; max-width: none !important; width: auto !important; }
+.tn-cmdk .tn-pl-empty-s::before { content: "试试输入命令名称、面板标题或目录路径。"; font-size: 12.5px; line-height: 1.45; white-space: nowrap; }
+
 .tn-cmdk .ck-foot > span { font-size: 0; }
 .tn-cmdk .ck-foot > span .kbd { font-size: 11px; }
 .tn-cmdk .ck-foot > span:nth-of-type(1)::after { content: "选择"; font-size: 12px; white-space: nowrap; }
